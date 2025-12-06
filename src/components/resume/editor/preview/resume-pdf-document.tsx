@@ -1,14 +1,25 @@
 'use client';
 
 import { Resume } from "@/lib/types";
-import { Document as PDFDocument, Page as PDFPage, Text, View, StyleSheet, Link, Image } from '@react-pdf/renderer';
+import { Document as PDFDocument, Page as PDFPage, Text, View, StyleSheet, Link, Image, Font } from '@react-pdf/renderer';
 import { memo, useMemo, useCallback } from 'react';
 import type { ReactNode } from 'react';
+
+// Register Times New Roman font family
+Font.register({
+  family: 'Times-Roman',
+  fonts: [
+    { src: 'https://cdn.jsdelivr.net/npm/@canvas-fonts/times-new-roman@1.0.4/Times%20New%20Roman.ttf', fontWeight: 'normal' },
+    { src: 'https://cdn.jsdelivr.net/npm/@canvas-fonts/times-new-roman@1.0.4/Times%20New%20Roman%20Bold.ttf', fontWeight: 'bold' },
+    { src: 'https://cdn.jsdelivr.net/npm/@canvas-fonts/times-new-roman@1.0.4/Times%20New%20Roman%20Italic.ttf', fontStyle: 'italic' },
+    { src: 'https://cdn.jsdelivr.net/npm/@canvas-fonts/times-new-roman@1.0.4/Times%20New%20Roman%20Bold%20Italic.ttf', fontWeight: 'bold', fontStyle: 'italic' },
+  ],
+});
 
 // Base styles that don't depend on resume settings
 const baseStyles = {
   link: {
-    color: '#2563eb',
+    color: '#0891b2', // Cyan/teal color to match your preferred layout
     textDecoration: 'none',
   },
   bulletSeparator: {
@@ -45,7 +56,7 @@ function useTextProcessor() {
     const parts = text.split(/(\*\*.*?\*\*)/g);
     const processed = parts.map((part, index) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <Text key={index} style={{ fontFamily: 'Helvetica-Bold' }}>{part.slice(2, -2)}</Text>;
+        return <Text key={index} style={{ fontFamily: 'Times-Roman', fontWeight: 'bold' }}>{part.slice(2, -2)}</Text>;
       }
       return <Text key={index}>{part}</Text>;
     });
@@ -178,7 +189,7 @@ const ExperienceSection = memo(function ExperienceSection({
           </View>
           {experience.description.map((bullet, bulletIndex) => (
             <View key={bulletIndex} style={styles.bulletPoint}>
-              <Text style={styles.bulletDot}>•</Text>
+              <Text style={styles.bulletDot}>○</Text>
               <View style={styles.bulletText}>
                 <Text style={styles.bulletTextContent}>
                   {processText(bullet)}
@@ -238,7 +249,7 @@ const ProjectsSection = memo(function ProjectsSection({
           
           {project.description.map((bullet, bulletIndex) => (
             <View key={bulletIndex} style={styles.bulletPoint}>
-              <Text style={styles.bulletDot}>•</Text>
+              <Text style={styles.bulletDot}>○</Text>
               <View style={styles.bulletText}>
                 <Text style={styles.bulletTextContent}>
                   {processText(bullet)}
@@ -276,7 +287,7 @@ const EducationSection = memo(function EducationSection({
           </View>
           {edu.achievements && edu.achievements.map((achievement, bulletIndex) => (
             <View key={bulletIndex} style={styles.bulletPoint}>
-              <Text style={styles.bulletDot}>•</Text>
+              <Text style={styles.bulletDot}>○</Text>
               <View style={styles.bulletText}>
                 {processText(achievement)}
               </View>
@@ -348,19 +359,19 @@ function createResumeStyles(settings: Resume['document_settings'] = {
       paddingBottom: document_margin_vertical + 28,
       paddingLeft: document_margin_horizontal,
       paddingRight: document_margin_horizontal,
-      fontFamily: 'Helvetica',
+      fontFamily: 'Times-Roman',
       color: '#111827',
       fontSize: document_font_size,
       lineHeight: document_line_height,
       position: 'relative',
-      // backgroundColor: '#32a852',  // Bright green color that should be very visible for testing
     },
     header: {
       alignItems: 'center',
     },
     name: {
       fontSize: header_name_size,
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: 'Times-Roman',
+      fontWeight: 'bold',
       marginBottom: header_name_bottom_spacing,
       color: '#111827',
       textAlign: 'center',
@@ -374,13 +385,14 @@ function createResumeStyles(settings: Resume['document_settings'] = {
       gap: 4,
     },
     sectionTitle: {
-      fontSize: document_font_size,
-      fontFamily: 'Helvetica-Bold',
+      fontSize: document_font_size + 2,
+      fontFamily: 'Times-Roman',
+      fontWeight: 'bold',
       marginBottom: 4,
+      marginTop: 8,
       color: '#111827',
-      textTransform: 'uppercase',
-      borderBottom: '0.5pt solid #e5e7eb',
-      paddingBottom: 0,
+      borderBottom: '1pt solid #374151',
+      paddingBottom: 2,
     },
     // Skills section
     skillsSection: {
@@ -401,7 +413,8 @@ function createResumeStyles(settings: Resume['document_settings'] = {
     },
     skillCategoryTitle: {
       fontSize: document_font_size,
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: 'Times-Roman',
+      fontWeight: 'bold',
       color: '#111827',
       marginRight: 4,
       width: 'auto',
@@ -431,11 +444,14 @@ function createResumeStyles(settings: Resume['document_settings'] = {
     },
     companyName: {
       fontSize: document_font_size,
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: 'Times-Roman',
+      fontWeight: 'bold',
       color: '#111827',
     },
     jobTitle: {
       fontSize: document_font_size,
+      fontFamily: 'Times-Roman',
+      fontStyle: 'italic',
       color: '#111827',
     },
     companyLocationRow: {
@@ -445,10 +461,14 @@ function createResumeStyles(settings: Resume['document_settings'] = {
     },
     locationText: {
       fontSize: document_font_size,
+      fontFamily: 'Times-Roman',
+      fontStyle: 'italic',
       color: '#374151',
     },
     dateRange: {
       fontSize: document_font_size,
+      fontFamily: 'Times-Roman',
+      fontStyle: 'italic',
       color: '#111827',
       textAlign: 'right',
     },
@@ -495,13 +515,15 @@ function createResumeStyles(settings: Resume['document_settings'] = {
     },
     projectTitle: {
       fontSize: document_font_size,
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: 'Times-Roman',
+      fontWeight: 'bold',
       color: '#111827',
     },
     projectTechnologies: {
       fontSize: document_font_size,
       color: '#374151',
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: 'Times-Roman',
+      fontStyle: 'italic',
       marginBottom: 0,
     },
     projectDescription: {
@@ -531,12 +553,15 @@ function createResumeStyles(settings: Resume['document_settings'] = {
     },
     schoolName: {
       fontSize: document_font_size,
-      fontFamily: 'Helvetica-Bold',
+      fontFamily: 'Times-Roman',
+      fontWeight: 'bold',
       color: '#111827',
     },
     degree: {
       fontSize: document_font_size,
-      color: '#111827',
+      fontFamily: 'Times-Roman',
+      fontStyle: 'italic',
+      color: '#0891b2', // Cyan color for degree field like in your layout
     },
     footer: {
       position: 'absolute',
@@ -568,14 +593,14 @@ export const ResumePDFDocument = memo(function ResumePDFDocument({ resume }: Res
     <PDFDocument>
       <PDFPage size="LETTER" style={styles.page}>
         <HeaderSection resume={resume} styles={styles} />
-        <SkillsSection skills={resume.skills} styles={styles} />
+        <EducationSection education={resume.education} styles={styles} />
         <ExperienceSection experiences={resume.work_experience} styles={styles} />
         <ProjectsSection projects={resume.projects} styles={styles} />
-        <EducationSection education={resume.education} styles={styles} />
-        
+        <SkillsSection skills={resume.skills} styles={styles} />
+
         {resume.document_settings?.show_ubc_footer && (
           <View style={styles.footer}>
-            <Image 
+            <Image
               src="/images/ubc-science-footer.png"
               style={styles.footerImage}
             />

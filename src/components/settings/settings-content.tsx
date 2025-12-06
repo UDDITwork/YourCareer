@@ -74,8 +74,8 @@ export function SettingsContent({ user, isProPlan, subscriptionStatus }: Setting
                 variant="ghost"
                 className={cn(
                   "w-full justify-start text-left font-normal transition-all duration-200 relative pl-8",
-                  activeSection === section.id && 
-                  "bg-gradient-to-r from-purple-600/10 to-indigo-600/10 text-purple-600 font-medium",
+                  activeSection === section.id &&
+                  "bg-gradient-to-r from-amber-600/10 to-brown-600/10 text-amber-600 font-medium",
                   activeSection !== section.id && "text-muted-foreground hover:text-foreground"
                 )}
                 onClick={() => scrollToSection(section.id)}
@@ -83,7 +83,7 @@ export function SettingsContent({ user, isProPlan, subscriptionStatus }: Setting
                 <span className="absolute left-2">{section.icon}</span>
                 <span className="truncate">{section.title}</span>
                 {activeSection === section.id && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-gradient-to-b from-purple-600 to-indigo-600 rounded-full" />
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-gradient-to-b from-amber-600 to-brown-600 rounded-full" />
                 )}
               </Button>
             ))}

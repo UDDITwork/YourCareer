@@ -79,9 +79,28 @@ export function initializeAIClient(config?: AIConfig, isPro?: boolean, useThinki
     }
   }
 
-  // Existing logic for free users
+  // Existing logic for free users - use default free model with server-side keys
   if (!config) {
-    return createOpenAI({ apiKey: '' })('no-model') as LanguageModelV1;
+    // Default to the free model using server-side API keys
+    const defaultModel = 'gpt-4o-mini';
+
+    // Try OpenAI first
+    const openAIKey = process.env.OPENAI_API_KEY;
+    if (openAIKey) {
+      return createOpenAI({
+        apiKey: openAIKey,
+        compatibility: 'strict'
+      })(defaultModel) as LanguageModelV1;
+    }
+
+    // Fallback to Anthropic if OpenAI key is not available
+    const anthropicKey = process.env.ANTHROPIC_API_KEY;
+    if (anthropicKey) {
+      return createAnthropic({ apiKey: anthropicKey })('claude-haiku-4-5-20251001') as LanguageModelV1;
+    }
+
+    // No API keys available
+    throw new Error('No API key available. Please configure OPENAI_API_KEY or ANTHROPIC_API_KEY in environment variables.');
   }
 
   const { model, apiKeys } = config;
@@ -93,14 +112,14 @@ export function initializeAIClient(config?: AIConfig, isPro?: boolean, useThinki
     throw new Error(`Unknown model: ${model}`);
   }
   
-  // Special case: free-tier models (e.g., GPT-5 Mini) skip user key requirement
+  // Special case: free-tier models (e.g., GPT-4o Mini) skip user key requirement
   // Also allow GPT OSS models to use server-side OpenRouter key
   if (modelData.features.isFree || resolvedModelId.includes('/')) {
     // For OpenRouter models (with slash), use OpenRouter key
     if (resolvedModelId.includes('/')) {
       const openRouterKey = process.env.OPENROUTER_API_KEY;
       if (!openRouterKey) throw new Error('OpenRouter API key not found');
-      
+
       return createOpenRouter({
         apiKey: openRouterKey,
         baseURL: 'https://openrouter.ai/api/v1',
@@ -110,16 +129,45 @@ export function initializeAIClient(config?: AIConfig, isPro?: boolean, useThinki
         }
       })(resolvedModelId) as LanguageModelV1;
     }
-    
-    // For regular free models like GPT 4.1 Nano
+
+    // For regular free models like GPT-4o Mini - use server-side API key with fallback
     const envKey = process.env[provider.envKey];
-    if (!envKey) throw new Error(`${provider.name} API key not found`);
-    
+
     if (provider.id === 'openai') {
-      return createOpenAI({ 
-        apiKey: envKey,
-        compatibility: 'strict',
-      })(resolvedModelId) as LanguageModelV1;
+      if (envKey) {
+        return createOpenAI({
+          apiKey: envKey,
+          compatibility: 'strict',
+        })(resolvedModelId) as LanguageModelV1;
+      }
+
+      // Fallback to Anthropic if OpenAI key is missing
+      const anthropicKey = process.env.ANTHROPIC_API_KEY;
+      if (anthropicKey) {
+        console.log('[AI Tools] OpenAI key not found, falling back to Anthropic');
+        return createAnthropic({ apiKey: anthropicKey })('claude-haiku-4-5-20251001') as LanguageModelV1;
+      }
+
+      throw new Error('No API key available. Please configure OPENAI_API_KEY or ANTHROPIC_API_KEY in environment variables.');
+    }
+
+    // For Anthropic models
+    if (provider.id === 'anthropic') {
+      if (envKey) {
+        return createAnthropic({ apiKey: envKey })(resolvedModelId) as LanguageModelV1;
+      }
+
+      // Fallback to OpenAI if Anthropic key is missing
+      const openAIKey = process.env.OPENAI_API_KEY;
+      if (openAIKey) {
+        console.log('[AI Tools] Anthropic key not found, falling back to OpenAI');
+        return createOpenAI({
+          apiKey: openAIKey,
+          compatibility: 'strict',
+        })('gpt-4o-mini') as LanguageModelV1;
+      }
+
+      throw new Error('No API key available. Please configure OPENAI_API_KEY or ANTHROPIC_API_KEY in environment variables.');
     }
   }
   

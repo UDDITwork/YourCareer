@@ -87,13 +87,16 @@ function parseApiKeys(raw: string | null): ApiKey[] {
   }
 }
 
-function isValidApiKey(value: any): value is ApiKey {
+function isValidApiKey(value: unknown): value is ApiKey {
   return (
-    value &&
+    value !== null &&
     typeof value === 'object' &&
-    typeof value.service === 'string' &&
-    typeof value.key === 'string' &&
-    typeof value.addedAt === 'string'
+    'service' in value &&
+    'key' in value &&
+    'addedAt' in value &&
+    typeof (value as ApiKey).service === 'string' &&
+    typeof (value as ApiKey).key === 'string' &&
+    typeof (value as ApiKey).addedAt === 'string'
   )
 }
 

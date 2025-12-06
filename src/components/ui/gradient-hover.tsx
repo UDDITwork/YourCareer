@@ -16,12 +16,12 @@ interface GradientHoverProps {
 export function GradientHover({
   children,
   className,
-  from = "violet-600",
-  via = "blue-600",
-  to = "violet-600",
-  hoverFrom = "blue-600",
-  hoverVia = "violet-600",
-  hoverTo = "blue-600",
+  from = "amber-600",
+  via = "brown-600",
+  to = "amber-600",
+  hoverFrom = "brown-600",
+  hoverVia = "amber-600",
+  hoverTo = "brown-600",
 }: GradientHoverProps) {
   return (
     <span

@@ -8,9 +8,9 @@ import { ArrowRight, Sparkles, Mail, User } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 
 const gradientClasses = {
-  base: "bg-gradient-to-r from-violet-600 via-blue-600 to-violet-600",
-  hover: "hover:from-violet-500 hover:via-blue-500 hover:to-violet-500",
-  shadow: "shadow-lg shadow-violet-500/25",
+  base: "bg-gradient-to-r from-amber-600 via-brown-600 to-amber-600",
+  hover: "hover:from-amber-500 hover:via-brown-500 hover:to-amber-500",
+  shadow: "shadow-lg shadow-amber-500/25",
   animation: "transition-all duration-500 animate-gradient-x",
 };
 
@@ -31,11 +31,11 @@ export function WaitlistDialog() {
         className="sm:max-w-[500px] p-0 bg-white/95 border-white/40 shadow-2xl animate-in fade-in-0 zoom-in-95"
       >
         <div className="px-8 pt-8 pb-0 text-center relative">
-          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-br from-violet-600/5 via-blue-600/5 to-violet-600/5 blur-2xl" />
+          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-br from-amber-600/5 via-brown-600/5 to-amber-600/5 blur-2xl" />
           <div className="relative">
             <div className="inline-flex items-center justify-center space-x-2 mb-3">
-              <Sparkles className="w-5 h-5 text-violet-500" aria-hidden="true" />
-              <span className="text-sm font-medium bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">
+              <Sparkles className="w-5 h-5 text-amber-500" aria-hidden="true" />
+              <span className="text-sm font-medium bg-gradient-to-r from-amber-600 to-brown-600 bg-clip-text text-transparent">
                 Early Access Waitlist
               </span>
             </div>
@@ -51,8 +51,8 @@ export function WaitlistDialog() {
 
         <div className="p-8 relative">
           {/* Decorative background elements */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-br from-violet-100/20 via-transparent to-blue-100/20 rounded-b-lg"
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-amber-100/20 via-transparent to-brown-100/20 rounded-b-lg"
             aria-hidden="true"
           />
           
@@ -68,7 +68,7 @@ export function WaitlistDialog() {
                   <Input
                     id="firstName"
                     placeholder="John"
-                    className="pl-9 bg-white/60 border-white/40 focus:border-violet-500 transition-colors"
+                    className="pl-9 bg-white/60 border-white/40 focus:border-amber-500 transition-colors"
                   />
                 </div>
               </div>
@@ -82,7 +82,7 @@ export function WaitlistDialog() {
                   <Input
                     id="lastName"
                     placeholder="Doe"
-                    className="pl-9 bg-white/60 border-white/40 focus:border-violet-500 transition-colors"
+                    className="pl-9 bg-white/60 border-white/40 focus:border-amber-500 transition-colors"
                   />
                 </div>
               </div>
@@ -98,7 +98,7 @@ export function WaitlistDialog() {
                   id="email"
                   type="email"
                   placeholder="john@example.com"
-                  className="pl-9 bg-white/60 border-white/40 focus:border-violet-500 transition-colors"
+                  className="pl-9 bg-white/60 border-white/40 focus:border-amber-500 transition-colors"
                 />
               </div>
             </div>
@@ -122,15 +122,15 @@ export function WaitlistDialog() {
               </div>
               <div className="flex justify-center gap-4 text-xs text-muted-foreground">
                 <span className="flex items-center">
-                  <Sparkles className="mr-1.5 w-3 h-3 text-violet-500" />
+                  <Sparkles className="mr-1.5 w-3 h-3 text-amber-500" />
                   Priority Access
                 </span>
                 <span className="flex items-center">
-                  <Sparkles className="mr-1.5 w-3 h-3 text-blue-500" />
+                  <Sparkles className="mr-1.5 w-3 h-3 text-brown-500" />
                   Extended Trial
                 </span>
                 <span className="flex items-center">
-                  <Sparkles className="mr-1.5 w-3 h-3 text-violet-500" />
+                  <Sparkles className="mr-1.5 w-3 h-3 text-amber-500" />
                   Special Pricing
                 </span>
               </div>

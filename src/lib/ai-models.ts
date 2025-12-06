@@ -97,24 +97,8 @@ export const PROVIDERS: Partial<Record<ServiceName, AIProvider>> = {
 export const AI_MODELS: AIModel[] = [
   // OpenAI Models
   {
-    id: 'gpt-5',
-    name: 'GPT-5',
-    provider: 'openai',
-    features: {
-      isRecommended: true,
-      isUnstable: false,
-      maxTokens: 400000,
-      supportsVision: true,
-      supportsTools: true
-    },
-    availability: {
-      requiresApiKey: true,
-      requiresPro: false
-    }
-  },
-  {
-    id: 'gpt-5.1-chat',
-    name: 'GPT-5.1',
+    id: 'gpt-4o',
+    name: 'GPT-4o',
     provider: 'openai',
     features: {
       isRecommended: true,
@@ -129,8 +113,8 @@ export const AI_MODELS: AIModel[] = [
     }
   },
   {
-    id: 'gpt-5-mini-2025-08-07',
-    name: 'GPT-5 Mini',
+    id: 'gpt-4o-mini',
+    name: 'GPT-4o Mini',
     provider: 'openai',
     features: {
       isFree: true,
@@ -138,6 +122,23 @@ export const AI_MODELS: AIModel[] = [
       isUnstable: false,
       maxTokens: 128000,
       supportsVision: true,
+      supportsTools: true
+    },
+    availability: {
+      requiresApiKey: false,
+      requiresPro: false
+    }
+  },
+  {
+    id: 'gpt-3.5-turbo',
+    name: 'GPT-3.5 Turbo',
+    provider: 'openai',
+    features: {
+      isFree: true,
+      isRecommended: false,
+      isUnstable: false,
+      maxTokens: 16385,
+      supportsVision: false,
       supportsTools: true
     },
     availability: {
@@ -250,7 +251,7 @@ const MODEL_ALIASES: Record<string, string> = {
 
 export const DEFAULT_MODELS = {
   PRO_USER: 'claude-sonnet-4-20250514',
-  FREE_USER: 'gpt-5-mini-2025-08-07'
+  FREE_USER: 'gpt-4o-mini'
 } as const
 
 // ========================
@@ -263,26 +264,26 @@ export const DEFAULT_MODELS = {
  */
 export const MODEL_DESIGNATIONS = {
   // Fast & cheap model for parsing, simple tasks, quick analysis
-  FAST_CHEAP: 'gpt-5.1-chat',
-  
+  FAST_CHEAP: 'gpt-4o-mini',
+
   // Alternative fast & cheap option (free for all users)
-  FAST_CHEAP_FREE: 'gpt-5-mini-2025-08-07',
-  
+  FAST_CHEAP_FREE: 'gpt-4o-mini',
+
   // Frontier model for complex tasks, deep analysis, best quality
   FRONTIER: 'claude-sonnet-4-20250514',
-  
+
   // Alternative frontier model
-  FRONTIER_ALT: 'gpt-5',
-  
+  FRONTIER_ALT: 'gpt-4o',
+
   // Balanced model - good quality but faster/cheaper than frontier
-  BALANCED: 'gemini-3-pro-preview',
-  
+  BALANCED: 'gpt-4o',
+
   // Vision-capable model for image analysis
-  VISION: 'gpt-5',
-  
+  VISION: 'gpt-4o',
+
   // Default models by user type
   DEFAULT_PRO: 'claude-sonnet-4-20250514',
-  DEFAULT_FREE: 'gpt-5-mini-2025-08-07'
+  DEFAULT_FREE: 'gpt-4o-mini'
 } as const
 
 // Type for model designations

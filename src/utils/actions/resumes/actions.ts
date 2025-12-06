@@ -485,13 +485,31 @@ export async function generateResumeScore(
     const { object } = await generateObject({
       model: aiClient,
       schema: resumeScoreSchema,
-      prompt
+      prompt,
+      mode: 'json',
     });
 
-    // console.log("THE OUTPUTTED object", object);
     return object
   } catch (error) {
     console.error('Error SCORING resume:', error);
-    throw error;
+    // Return a fallback score object if AI fails
+    return {
+      overallScore: { score: 0, reason: 'Unable to generate score at this time. Please try again.' },
+      completeness: {
+        contactInformation: { score: 0, reason: 'Score unavailable' },
+        detailLevel: { score: 0, reason: 'Score unavailable' }
+      },
+      impactScore: {
+        activeVoiceUsage: { score: 0, reason: 'Score unavailable' },
+        quantifiedAchievements: { score: 0, reason: 'Score unavailable' }
+      },
+      roleMatch: {
+        skillsRelevance: { score: 0, reason: 'Score unavailable' },
+        experienceAlignment: { score: 0, reason: 'Score unavailable' },
+        educationFit: { score: 0, reason: 'Score unavailable' }
+      },
+      overallImprovements: ['Unable to generate improvements. Please check your API key configuration and try again.'],
+      isTailoredResume: false
+    };
   }
 }

@@ -13,7 +13,12 @@
       "Bash(pnpm info:*)",
       "Bash(git restore:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(cat:*)",
+      "Bash(npm info:*)",
+      "Bash(findstr:*)",
+      "Bash(npx next info:*)",
+      "Bash(git remote:*)"
     ],
     "deny": [],
     "ask": []

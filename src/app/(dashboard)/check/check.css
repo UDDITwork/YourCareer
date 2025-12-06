@@ -1,0 +1,4 @@
+/* Hide footer on check page */
+footer {
+  display: none !important;
+}

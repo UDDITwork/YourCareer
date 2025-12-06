@@ -322,10 +322,10 @@ export const resumeScoreSchema = z.object({
     })
   }).optional(),
   miscellaneous: z.record(
-    z.union([z.number(), z.object({
-      score: z.number().min(0).max(100).optional(),
-      reason: z.string().optional()
-    })]).optional()
+    z.object({
+      score: z.number().min(0).max(100),
+      reason: z.string()
+    })
   ).optional(),
   overallImprovements: z.array(z.string()),
   // Job-specific improvements for tailored resumes

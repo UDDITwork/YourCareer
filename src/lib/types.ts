@@ -214,3 +214,65 @@ export interface SortDescriptor<T> {
   column: T;
   direction: SortDirection;
 }
+
+// Career Counselling Types
+export interface CareerSessionMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+}
+
+export interface CareerReport {
+  generated_at: string;
+  personal_summary: string;
+  strengths: string[];
+  areas_for_growth: string[];
+  recommended_careers: {
+    title: string;
+    reasoning: string;
+    salary_range?: string;
+    growth_prospects?: string;
+  }[];
+  subject_guidance?: string;
+  competitive_exams?: string[];
+  skill_development: {
+    skill: string;
+    priority: 'high' | 'medium' | 'low';
+    resources?: string[];
+  }[];
+  action_plan: {
+    timeframe: string;
+    actions: string[];
+  }[];
+  additional_resources?: string[];
+}
+
+export interface CareerSession {
+  id: string;
+  user_id: string;
+  title: string;
+  messages: CareerSessionMessage[];
+  collected_data?: {
+    education_level?: string;
+    board?: string;
+    subjects?: string[];
+    interests?: string[];
+    skills?: string[];
+    location?: string;
+    career_goals?: string;
+  };
+  report?: CareerReport;
+  status: 'in_progress' | 'completed';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CareerSessionSummary {
+  id: string;
+  user_id: string;
+  title: string;
+  status: 'in_progress' | 'completed';
+  has_report: boolean;
+  created_at: string;
+  updated_at: string;
+}

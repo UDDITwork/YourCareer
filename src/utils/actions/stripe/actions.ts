@@ -5,10 +5,20 @@ import { createClient, createServiceClient } from '@/utils/supabase/server';
 import { Subscription } from '@/lib/types';
 import { revalidatePath } from "next/cache";
 
-// Initialize stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-04-30.basil'
-});
+// Lazy initialize stripe - only when actually needed
+let stripeInstance: Stripe | null = null;
+
+function getStripe(): Stripe {
+  if (!stripeInstance) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('Stripe is not configured. Set STRIPE_SECRET_KEY in your environment variables to enable payment features.');
+    }
+    stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2025-04-30.basil'
+    });
+  }
+  return stripeInstance;
+}
 
 // Create or retrieve a Stripe customer
 export async function createOrRetrieveCustomer({
@@ -40,7 +50,7 @@ export async function createOrRetrieveCustomer({
 
 // Create a new customer in Stripe
 async function createCustomerInStripe(uuid: string, email: string): Promise<string> {
-  const customer = await stripe.customers.create({
+  const customer = await getStripe().customers.create({
     email,
     metadata: {
       supabaseUUID: uuid
@@ -88,7 +98,7 @@ export async function manageSubscriptionStatusChange(
 
   // Get customer's UUID from Stripe metadata
   console.log('🔍 Retrieving customer data from Stripe...');
-  const customerData = await stripe.customers.retrieve(customerId);
+  const customerData = await getStripe().customers.retrieve(customerId);
   if ('deleted' in customerData) {
     console.error('❌ Customer has been deleted');
     throw new Error('Customer has been deleted');
@@ -97,7 +107,7 @@ export async function manageSubscriptionStatusChange(
   console.log('✅ Retrieved customer UUID:', uuid);
 
   console.log('📦 Retrieving subscription details from Stripe...');
-  const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+  const subscription = await getStripe().subscriptions.retrieve(subscriptionId, {
     expand: ['default_payment_method', 'items.data.price']
   });
   console.log('✅ Retrieved subscription details:', {
@@ -192,7 +202,7 @@ export async function deleteCustomerAndData(uuid: string) {
 
   if (subscription?.stripe_customer_id) {
     // Delete customer in Stripe
-    await stripe.customers.del(subscription.stripe_customer_id);
+    await getStripe().customers.del(subscription.stripe_customer_id);
   }
 
   // Delete subscription record

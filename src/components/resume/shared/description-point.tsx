@@ -56,18 +56,18 @@ export function DescriptionPoint({
                 "hover:border-cyan-500/30 hover:bg-white/60 transition-colors",
                 "placeholder:text-gray-400",
                 isImproved && [
-                  "border-purple-400",
-                  "bg-gradient-to-r from-purple-50/80 to-indigo-50/80",
+                  "border-amber-400",
+                  "bg-gradient-to-r from-amber-50/80 to-indigo-50/80",
                   "shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]",
-                  "hover:bg-gradient-to-r hover:from-purple-50/90 hover:to-indigo-50/90"
+                  "hover:bg-gradient-to-r hover:from-amber-50/90 hover:to-indigo-50/90"
                 ]
               )
             }
           }}
         />
         {isImproved && (
-          <div className="absolute -top-2.5 right-12 px-2 py-0.5 bg-purple-100 rounded-full">
-            <span className="text-[10px] font-medium text-purple-600 flex items-center gap-1">
+          <div className="absolute -top-2.5 right-12 px-2 py-0.5 bg-amber-100 rounded-full">
+            <span className="text-[10px] font-medium text-amber-600 flex items-center gap-1">
               <Sparkles className="h-3 w-3" />
               AI Suggestion
             </span>
@@ -135,9 +135,9 @@ export function DescriptionPoint({
                     className={cn(
                       "p-0 group-hover/item:opacity-100",
                       "h-8 w-8 rounded-lg",
-                      "bg-purple-50/80 hover:bg-purple-100/80",
-                      "text-purple-600 hover:text-purple-700",
-                      "border border-purple-200/60",
+                      "bg-amber-50/80 hover:bg-amber-100/80",
+                      "text-amber-600 hover:text-amber-700",
+                      "border border-amber-200/60",
                       "shadow-sm",
                       "transition-all duration-300",
                       "hover:scale-105 hover:shadow-md",
@@ -158,9 +158,9 @@ export function DescriptionPoint({
                     sideOffset={2}
                     className={cn(
                       "w-72 p-3.5",
-                      "bg-purple-50",
-                      "border-2 border-purple-300",
-                      "shadow-lg shadow-purple-100/50",
+                      "bg-amber-50",
+                      "border-2 border-amber-300",
+                      "shadow-lg shadow-amber-100/50",
                       "rounded-lg"
                     )}
                   >

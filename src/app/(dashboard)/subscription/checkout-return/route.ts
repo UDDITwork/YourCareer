@@ -4,9 +4,18 @@ import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
+// Lazy initialize stripe
+let stripeInstance: Stripe | null = null;
 
-const apiKey = process.env.STRIPE_SECRET_KEY as string;
-const stripe = new Stripe(apiKey);
+function getStripe(): Stripe {
+  if (!stripeInstance) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('Stripe is not configured. Set STRIPE_SECRET_KEY in your environment variables.');
+    }
+    stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
+  }
+  return stripeInstance;
+}
 
 export const GET = async (request: NextRequest) => {
   const { searchParams } = new URL(request.url);
@@ -17,7 +26,7 @@ export const GET = async (request: NextRequest) => {
   if (!stripeSessionId?.length)
     return redirect("/home");
 
-  const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
+  const session = await getStripe().checkout.sessions.retrieve(stripeSessionId);
 
   if (session.status === "complete") {
     return redirect(`/subscription/checkout/success?session_id=${stripeSessionId}`);

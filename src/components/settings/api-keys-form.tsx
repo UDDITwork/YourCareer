@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Eye, EyeOff, Copy, Check } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { ServiceName } from "@/lib/types"
+import type { ApiKey } from "@/lib/ai-models"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import replaceSpecialCharacters from 'replace-special-characters'
@@ -139,7 +140,7 @@ export function ApiKeysForm({ isProPlan }: { isProPlan: boolean }) {
     <div className="space-y-6">
       {/* Model Selection Card */}
       <div className="p-5 rounded-xl bg-gradient-to-br from-white/50 to-white/30 border border-white/40 shadow-xl backdrop-blur-sm">
-        <Label className="text-base font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+        <Label className="text-base font-semibold bg-gradient-to-r from-amber-600 to-brown-600 bg-clip-text text-transparent">
           Default AI Model
         </Label>
         <p className="text-sm text-muted-foreground mt-2 mb-3">

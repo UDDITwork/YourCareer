@@ -320,7 +320,7 @@ export function CreateTailoredResumeDialog({ children, baseResumes, profile }: C
             </div>
             {profile ? (
               <CreateBaseResumeDialog profile={profile}>
-                <Button className="mt-2 bg-purple-600 hover:bg-purple-700 text-white">
+                <Button className="mt-2 bg-amber-600 hover:bg-amber-700 text-white">
                   <Plus className="w-4 h-4 mr-2" />
                   Create Base Resume
                 </Button>
@@ -401,7 +401,7 @@ export function CreateTailoredResumeDialog({ children, baseResumes, profile }: C
               <div className="space-y-6">
                 {/* Header Section */}
                 <div className="text-center space-y-2">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 mb-1">
+                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-amber-600 mb-1">
                     <Sparkles className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900">Choose Your Foundation</h3>
@@ -427,7 +427,7 @@ export function CreateTailoredResumeDialog({ children, baseResumes, profile }: C
               <div className="space-y-6">
 
                 {/* Selected Resume Summary */}
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-3">
+                <div className="bg-gradient-to-r from-amber-50 to-pink-50 border border-amber-200 rounded-lg p-3">
                   <div className="flex items-center gap-3">
                     <div className="flex-shrink-0">
                       <MiniResumePreview
@@ -438,8 +438,8 @@ export function CreateTailoredResumeDialog({ children, baseResumes, profile }: C
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-purple-900">Foundation:</span>
-                        <span className="text-sm text-purple-700 font-semibold truncate">
+                        <span className="text-sm font-medium text-amber-900">Foundation:</span>
+                        <span className="text-sm text-amber-700 font-semibold truncate">
                           {baseResumes.find(r => r.id === selectedBaseResume)?.name}
                         </span>
                       </div>

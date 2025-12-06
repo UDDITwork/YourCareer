@@ -32,7 +32,7 @@ interface ModelSelectorProps {
 function UnavailableModelPopover({ children, model }: { children: React.ReactNode; model: AIModel }) {
   const [open, setOpen] = useState(false)
   const provider = getProviderById(model.provider)
-  
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -44,60 +44,60 @@ function UnavailableModelPopover({ children, model }: { children: React.ReactNod
           {children}
         </div>
       </PopoverTrigger>
-      <PopoverContent 
-        className="w-80 z-50" 
-        side="right" 
+      <PopoverContent
+        className="w-80 z-50 bg-white border border-black/50 rounded-none font-['Times_New_Roman',_Times,_serif]"
+        side="right"
         align="start"
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
       >
         <div className="space-y-3">
           <div className="space-y-1">
-            <h4 className="font-semibold text-sm">
+            <h4 className="font-semibold text-sm text-black">
               {model.name} is not available
             </h4>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-black/60">
               To use this model, you need either a Pro subscription or a {provider?.name} API key.
             </p>
           </div>
-          
+
           <div className="space-y-2">
             {/* Pro Option */}
-            <div className="p-3 rounded-lg border border-purple-200/50 bg-gradient-to-br from-purple-50/50 to-purple-100/30">
+            <div className="p-3 border border-black/30 bg-gray-50">
               <div className="flex items-center gap-2 mb-2">
-                <Crown className="w-4 h-4 text-purple-600" />
-                <span className="text-sm font-medium text-purple-800">Recommended</span>
-                <span className="px-2 py-0.5 text-xs font-medium bg-purple-100 text-purple-700 rounded-full">
+                <Crown className="w-4 h-4 text-black" />
+                <span className="text-sm font-medium text-black">Recommended</span>
+                <span className="px-2 py-0.5 text-xs font-medium bg-gray-100 text-black border border-black/20">
                   Instant Access
                 </span>
               </div>
-              <p className="text-xs text-purple-700 mb-2">
+              <p className="text-xs text-black/70 mb-2">
                 Get unlimited access to all AI models without managing API keys
               </p>
               <Link href="/subscription">
-                <Button size="sm" className="w-full bg-purple-600 hover:bg-purple-700 h-7 text-xs">
+                <Button size="sm" className="w-full bg-black hover:bg-gray-800 text-white h-7 text-xs rounded-none">
                   Upgrade to Pro
                 </Button>
               </Link>
             </div>
 
             {/* API Key Option */}
-            <div className="p-3 rounded-lg border border-gray-200/50 bg-gray-50/30">
+            <div className="p-3 border border-black/20 bg-white">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-800">Alternative</span>
+                <span className="text-sm font-medium text-black">Alternative</span>
               </div>
-              <p className="text-xs text-gray-600 mb-2">
+              <p className="text-xs text-black/60 mb-2">
                 Add your own {provider?.name} API key to use this model
               </p>
               <div className="flex gap-2">
                 <Link href="/settings" className="flex-1">
-                  <Button size="sm" variant="outline" className="w-full h-7 text-xs">
+                  <Button size="sm" variant="outline" className="w-full h-7 text-xs rounded-none border-black/50 text-black">
                     Configure API Key
                   </Button>
                 </Link>
                 {provider?.apiLink && (
                   <Link href={provider.apiLink} target="_blank" rel="noopener noreferrer">
-                    <Button size="sm" variant="ghost" className="h-7 px-2">
+                    <Button size="sm" variant="ghost" className="h-7 px-2 rounded-none">
                       <ArrowRight className="w-3 h-3" />
                     </Button>
                   </Link>
@@ -150,16 +150,16 @@ export function ModelSelector({
   return (
     <Select value={value} onValueChange={handleModelChange}>
       <SelectTrigger className={cn(
-        "bg-white/50 border-purple-600/60 hover:border-purple-600/80 focus:border-purple-600/40 transition-colors",
+        "bg-white border-black/50 hover:border-black focus:border-black transition-colors rounded-none font-['Times_New_Roman',_Times,_serif]",
         className
       )}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent className="min-w-[300px] max-w-[400px]">
+      <SelectContent className="min-w-[300px] max-w-[400px] bg-white border border-black/50 rounded-none">
         {getModelsByProvider().map((group, groupIndex) => (
           <div key={group.provider}>
             <SelectGroup>
-              <SelectLabel className="text-xs font-semibold text-muted-foreground px-2 py-1.5">
+              <SelectLabel className="text-xs font-semibold text-black/60 px-2 py-1.5">
                 <div className="flex items-center gap-2">
                   {getProviderById(group.provider)?.logo && (
                     <Image
@@ -176,15 +176,15 @@ export function ModelSelector({
               {group.models.map((model) => {
                 const provider = getProviderById(model.provider)
                 const isSelectable = isModelSelectable(model.id)
-                
+
                 const selectItem = (
-                  <SelectItem 
-                    key={model.id} 
+                  <SelectItem
+                    key={model.id}
                     value={model.id}
                     disabled={!isSelectable}
                     className={cn(
-                      "transition-colors",
-                      !isSelectable ? 'opacity-50' : 'hover:bg-purple-50'
+                      "transition-colors rounded-none",
+                      !isSelectable ? 'opacity-50' : 'hover:bg-gray-50'
                     )}
                   >
                     <div className="flex items-center gap-3 w-full">
@@ -198,25 +198,25 @@ export function ModelSelector({
                         />
                       )}
                       <div className="flex items-center gap-2 min-w-0 flex-1">
-                        <span className="truncate font-medium">{model.name}</span>
+                        <span className="truncate font-medium text-black">{model.name}</span>
                         {model.features.isRecommended && (
-                          <span className="text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0">
+                          <span className="text-black bg-gray-100 px-2 py-0.5 text-xs font-medium flex-shrink-0 border border-black/20">
                             Recommended
                           </span>
                         )}
                         {model.features.isFree && (
-                          <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0">
+                          <span className="text-black bg-gray-100 px-2 py-0.5 text-xs font-medium flex-shrink-0 border border-black/20">
                             Free
                           </span>
                         )}
                         {model.features.isUnstable && (
-                          <span className="text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0">
+                          <span className="text-black/80 bg-gray-100 px-2 py-0.5 text-xs font-medium flex-shrink-0 border border-black/20">
                             Unstable
                           </span>
                         )}
                       </div>
                       {!isSelectable && (
-                        <span className="ml-1.5 text-muted-foreground flex-shrink-0">(No API Key set)</span>
+                        <span className="ml-1.5 text-black/60 flex-shrink-0">(No API Key set)</span>
                       )}
                     </div>
                   </SelectItem>

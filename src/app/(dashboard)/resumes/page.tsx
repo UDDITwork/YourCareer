@@ -18,9 +18,9 @@ export default async function ResumesPage({
   searchParams: Promise<SearchParams>
 }) {
   const params = await searchParams;
-  
+
   const { baseResumes, tailoredResumes } = await getDashboardData();
-  
+
   // Combine and sort resumes
   const allResumes = [...baseResumes, ...tailoredResumes];
   const currentPage = Number(params.page) || 1;
@@ -49,21 +49,19 @@ export default async function ResumesPage({
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50/50 via-sky-50/50 to-violet-50/50">
-
-      
+    <div className="min-h-screen bg-background">
       <div className="container max-w-7xl mx-auto p-6 space-y-8">
-        {/* Header with controls */}
-        <div className="flex items-center justify-between">
+        {/* Header with controls - Magazine editorial style */}
+        <div className="flex items-center justify-between border-b-2 border-foreground pb-6">
           <div className="space-y-1">
-            <h1 className="text-3xl font-semibold tracking-tight bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-serif font-bold tracking-tight text-foreground uppercase">
               My Resumes
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground font-body italic">
               Manage all your resumes in one place
             </p>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <Suspense>
               <ResumeSortControls />
@@ -72,11 +70,11 @@ export default async function ResumesPage({
               href="/resumes/new"
               className={cn(
                 "inline-flex items-center justify-center",
-                "rounded-full text-sm font-medium",
-                "transition-all duration-500",
-                "bg-gradient-to-r from-purple-600 to-pink-600",
-                "text-white hover:shadow-lg hover:shadow-purple-500/25",
-                "hover:-translate-y-0.5",
+                "text-sm font-serif font-semibold uppercase tracking-wider",
+                "transition-all duration-300",
+                "bg-primary text-primary-foreground",
+                "border-2 border-foreground",
+                "hover:shadow-lg hover:-translate-y-0.5",
                 "h-10 px-6"
               )}
             >
@@ -85,8 +83,8 @@ export default async function ResumesPage({
           </div>
         </div>
 
-        {/* Resumes Grid */}
-        <div className="relative rounded-2xl overflow-hidden backdrop-blur-xl bg-white/40 border border-purple-200/50 shadow-xl">
+        {/* Resumes Grid - Magazine layout */}
+        <div className="relative bg-card border-2 border-foreground shadow-lg">
           <Suspense fallback={<ResumesLoadingSkeleton />}>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
               {paginatedResumes.map((resume) => (
@@ -104,7 +102,7 @@ export default async function ResumesPage({
           </Suspense>
         </div>
 
-        {/* Pagination */}
+        {/* Pagination - Magazine page numbers */}
         {totalPages > 1 && (
           <div className="flex justify-center gap-2">
             {[...Array(totalPages)].map((_, i) => (
@@ -112,10 +110,10 @@ export default async function ResumesPage({
                 key={i}
                 href={`?page=${i + 1}&sort=${sort}&direction=${direction}`}
                 className={cn(
-                  "px-4 py-2 rounded-lg transition-colors",
+                  "px-4 py-2 transition-colors font-serif border-2",
                   currentPage === i + 1
-                    ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
-                    : "bg-white/40 hover:bg-white/60"
+                    ? "bg-primary text-primary-foreground border-foreground"
+                    : "bg-card border-border hover:border-foreground"
                 )}
               >
                 {i + 1}
@@ -132,9 +130,9 @@ function ResumesLoadingSkeleton() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
       {[...Array(8)].map((_, i) => (
-        <Skeleton 
-          key={i} 
-          className="w-full aspect-[8.5/11] rounded-lg bg-gradient-to-r from-gray-200/50 to-gray-100/50" 
+        <Skeleton
+          key={i}
+          className="w-full aspect-[8.5/11] bg-secondary border-2 border-border"
         />
       ))}
     </div>

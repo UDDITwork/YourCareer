@@ -1,28 +1,36 @@
 import { type EmailOtpType } from '@supabase/supabase-js'
-import { type NextRequest } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 import { createClient } from '@/utils/supabase/server'
-import { redirect } from 'next/navigation'
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
+  const { searchParams, origin } = new URL(request.url)
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
-  const next = searchParams.get('next') ?? '/'
+  const code = searchParams.get('code')
+  const next = searchParams.get('next') ?? '/home'
 
+  const supabase = await createClient()
+
+  // Handle PKCE flow (magic link with code parameter)
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    if (!error) {
+      return NextResponse.redirect(new URL(next, origin))
+    }
+  }
+
+  // Handle OTP flow (token_hash and type parameters)
   if (token_hash && type) {
-    const supabase = await createClient()
-
     const { error } = await supabase.auth.verifyOtp({
       type,
       token_hash,
     })
     if (!error) {
-      // redirect user to specified redirect URL or root of app
-      redirect(next)
+      return NextResponse.redirect(new URL(next, origin))
     }
   }
 
   // redirect to login page with error parameter
-  redirect('//?error=email_confirmation')
+  return NextResponse.redirect(new URL('/?error=email_confirmation', origin))
 }

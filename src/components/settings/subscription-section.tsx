@@ -76,7 +76,7 @@ export function SubscriptionSection() {
     return (
       <div className="space-y-6 relative min-h-[400px] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-16 w-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl animate-pulse" />
+          <div className="h-16 w-16 bg-gradient-to-br from-blue-100 to-amber-100 rounded-2xl animate-pulse" />
           <div className="space-y-2 text-center">
             <div className="h-6 w-48 bg-gradient-to-r from-slate-200 to-slate-100 rounded-lg animate-pulse" />
             <div className="h-4 w-64 bg-gradient-to-r from-slate-100 to-slate-200 rounded-lg animate-pulse" />
@@ -90,8 +90,8 @@ export function SubscriptionSection() {
     <div className="space-y-8">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-blue-400/5 to-purple-600/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-gradient-to-br from-purple-400/5 to-pink-600/5 rounded-full blur-3xl" />
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-blue-400/5 to-amber-600/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-gradient-to-br from-amber-400/5 to-pink-600/5 rounded-full blur-3xl" />
       </div>
 
       {/* Header Section - State Aware */}
@@ -114,8 +114,8 @@ export function SubscriptionSection() {
         ) : isPro ? (
           <>
             <div className="flex items-center justify-center mb-2">
-              <Crown className="h-6 w-6 text-purple-500 mr-2" />
-              <Badge className="bg-purple-100 text-purple-700 border-purple-300">
+              <Crown className="h-6 w-6 text-amber-500 mr-2" />
+              <Badge className="bg-amber-100 text-amber-700 border-amber-300">
                 Pro Member
               </Badge>
             </div>
@@ -218,7 +218,7 @@ export function SubscriptionSection() {
         <div className="space-y-6">
           <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm relative overflow-hidden">
             {!isPro && (
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-600" />
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-amber-600" />
             )}
             
             <div className="text-center mb-6">
@@ -276,7 +276,7 @@ export function SubscriptionSection() {
                 "w-full py-3 font-semibold rounded-lg transition-all duration-300",
                 isPro
                   ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl"
+                  : "bg-gradient-to-r from-blue-600 to-amber-600 hover:from-blue-700 hover:to-amber-700 text-white shadow-lg hover:shadow-xl"
               )}
             >
               {isLoading ? (

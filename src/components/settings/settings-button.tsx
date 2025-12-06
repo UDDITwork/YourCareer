@@ -11,12 +11,13 @@ interface SettingsButtonProps {
 export function SettingsButton({ className }: SettingsButtonProps) {
 
   return (
-    <Link 
-      href="/settings" 
+    <Link
+      href="/settings"
       className={cn(
         "flex items-center gap-1.5 px-3 py-1",
-        "text-sm font-medium text-purple-600/80 hover:text-purple-800",
-        "transition-colors duration-200",
+        "text-sm font-medium text-black/80 hover:text-black",
+        "transition-colors duration-200 uppercase tracking-wide",
+        "font-['Times_New_Roman',_Times,_serif]",
         className
       )}
     >

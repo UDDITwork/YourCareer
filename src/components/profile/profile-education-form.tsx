@@ -43,9 +43,9 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
   };
 
   return (
-    <div className="space-y-3">
-      <Accordion 
-        type="multiple" 
+    <div className="space-y-3 font-['Times_New_Roman',_Times,_serif]">
+      <Accordion
+        type="multiple"
         className="space-y-3"
         defaultValue={education.map((_, index) => `education-${index}`)}
       >
@@ -53,14 +53,14 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
           <AccordionItem
             key={index}
             value={`education-${index}`}
-            className="bg-gradient-to-r from-indigo-500/5 via-indigo-500/10 to-blue-500/5 backdrop-blur-md border border-indigo-500/30 hover:border-indigo-500/40 hover:shadow-lg transition-all duration-300 shadow-sm rounded-md overflow-hidden"
+            className="bg-white border border-black/50 rounded-none overflow-hidden"
           >
-            <AccordionTrigger className="px-4 py-2 hover:no-underline">
+            <AccordionTrigger className="px-4 py-2 hover:no-underline hover:bg-gray-50">
               <div className="flex items-center justify-between gap-3 flex-1">
-                <div className="flex-1 text-left text-sm font-medium text-indigo-900">
+                <div className="flex-1 text-left text-sm font-medium text-black">
                   {edu.degree ? `${edu.degree} ` : ''}{edu.field ? `in ${edu.field} ` : ''}{edu.school ? `at ${edu.school}` : 'New Education'}
                 </div>
-                <div className="flex items-center gap-2 text-xs text-gray-500">
+                <div className="flex items-center gap-2 text-xs text-black/60">
                   {edu.date && <span>{edu.date}</span>}
                   {edu.gpa && <span>GPA: {edu.gpa}</span>}
                 </div>
@@ -74,21 +74,20 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                     <Input
                       value={edu.school}
                       onChange={(e) => updateEducation(index, 'school', e.target.value)}
-                      className="text-base bg-white/50 border-gray-200 rounded-md h-8
-                        focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
-                        hover:border-indigo-500/30 hover:bg-white/60 transition-colors
-                        placeholder:text-gray-400"
+                      className="text-base bg-white border border-black/50 rounded-none h-8
+                        focus:border-black focus:ring-0
+                        placeholder:text-gray-400 font-['Times_New_Roman',_Times,_serif]"
                       placeholder="Institution Name"
                     />
-                    <div className="absolute -top-2.5 left-2 px-1 bg-white/80 text-[9px] font-medium text-indigo-700">
+                    <div className="absolute -top-2.5 left-2 px-1 bg-white text-[9px] font-medium text-black uppercase tracking-wider">
                       INSTITUTION
                     </div>
                   </div>
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     size="sm"
                     onClick={() => removeEducation(index)}
-                    className="text-gray-400 hover:text-red-500 transition-colors duration-300 h-8 w-8"
+                    className="text-black/60 hover:text-black hover:bg-gray-100 transition-colors h-8 w-8 rounded-none"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
@@ -99,13 +98,12 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                   <Input
                     value={edu.location}
                     onChange={(e) => updateEducation(index, 'location', e.target.value)}
-                    className="bg-white/50 border-gray-200 rounded-md h-8
-                      focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
-                      hover:border-indigo-500/30 hover:bg-white/60 transition-colors
-                      placeholder:text-gray-400 text-sm"
+                    className="bg-white border border-black/50 rounded-none h-8
+                      focus:border-black focus:ring-0
+                      placeholder:text-gray-400 text-sm font-['Times_New_Roman',_Times,_serif]"
                     placeholder="City, Country"
                   />
-                  <div className="absolute -top-2.5 left-2 px-1 bg-white/80 text-[9px] font-medium text-indigo-700">
+                  <div className="absolute -top-2.5 left-2 px-1 bg-white text-[9px] font-medium text-black uppercase tracking-wider">
                     LOCATION
                   </div>
                 </div>
@@ -116,13 +114,12 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                     <Input
                       value={edu.degree}
                       onChange={(e) => updateEducation(index, 'degree', e.target.value)}
-                      className="bg-white/50 border-gray-200 rounded-md h-8
-                        focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
-                        hover:border-indigo-500/30 hover:bg-white/60 transition-colors
-                        placeholder:text-gray-400 text-sm"
+                      className="bg-white border border-black/50 rounded-none h-8
+                        focus:border-black focus:ring-0
+                        placeholder:text-gray-400 text-sm font-['Times_New_Roman',_Times,_serif]"
                       placeholder="Bachelor's, Master's, etc."
                     />
-                    <div className="absolute -top-2.5 left-2 px-1 bg-white/80 text-[9px] font-medium text-indigo-700">
+                    <div className="absolute -top-2.5 left-2 px-1 bg-white text-[9px] font-medium text-black uppercase tracking-wider">
                       DEGREE
                     </div>
                   </div>
@@ -130,13 +127,12 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                     <Input
                       value={edu.field}
                       onChange={(e) => updateEducation(index, 'field', e.target.value)}
-                      className="bg-white/50 border-gray-200 rounded-md h-8
-                        focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
-                        hover:border-indigo-500/30 hover:bg-white/60 transition-colors
-                        placeholder:text-gray-400 text-sm"
+                      className="bg-white border border-black/50 rounded-none h-8
+                        focus:border-black focus:ring-0
+                        placeholder:text-gray-400 text-sm font-['Times_New_Roman',_Times,_serif]"
                       placeholder="Field of Study"
                     />
-                    <div className="absolute -top-2.5 left-2 px-1 bg-white/80 text-[9px] font-medium text-indigo-700">
+                    <div className="absolute -top-2.5 left-2 px-1 bg-white text-[9px] font-medium text-black uppercase tracking-wider">
                       FIELD OF STUDY
                     </div>
                   </div>
@@ -149,13 +145,12 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                       type="text"
                       value={edu.date}
                       onChange={(e) => updateEducation(index, 'date', e.target.value)}
-                      className="bg-white/50 border-gray-200 rounded-md h-8
-                        focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
-                        hover:border-indigo-500/30 hover:bg-white/60 transition-colors
-                        placeholder:text-gray-400 text-sm"
+                      className="bg-white border border-black/50 rounded-none h-8
+                        focus:border-black focus:ring-0
+                        placeholder:text-gray-400 text-sm font-['Times_New_Roman',_Times,_serif]"
                       placeholder="e.g., '2019 - 2023' or '2020 - Present'"
                     />
-                    <div className="absolute -top-2.5 left-2 px-1 bg-white/80 text-[9px] font-medium text-indigo-700">
+                    <div className="absolute -top-2.5 left-2 px-1 bg-white text-[9px] font-medium text-black uppercase tracking-wider">
                       DATE
                     </div>
                   </div>
@@ -164,13 +159,12 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                       type="text"
                       value={edu.gpa || ''}
                       onChange={(e) => updateEducation(index, 'gpa', e.target.value || undefined)}
-                      className="bg-white/50 border-gray-200 rounded-md h-8
-                        focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
-                        hover:border-indigo-500/30 hover:bg-white/60 transition-colors
-                        placeholder:text-gray-400 text-sm"
+                      className="bg-white border border-black/50 rounded-none h-8
+                        focus:border-black focus:ring-0
+                        placeholder:text-gray-400 text-sm font-['Times_New_Roman',_Times,_serif]"
                       placeholder="0.00"
                     />
-                    <div className="absolute -top-2.5 left-2 px-1 bg-white/80 text-[9px] font-medium text-indigo-700">
+                    <div className="absolute -top-2.5 left-2 px-1 bg-white text-[9px] font-medium text-black uppercase tracking-wider">
                       GPA (OPTIONAL)
                     </div>
                   </div>
@@ -179,19 +173,18 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
                 {/* Achievements */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-baseline">
-                    <Label className="text-xs font-medium text-indigo-700">Achievements & Activities</Label>
-                    <span className="text-[9px] text-gray-500">One achievement per line</span>
+                    <Label className="text-xs font-medium text-black uppercase tracking-wider">Achievements & Activities</Label>
+                    <span className="text-[9px] text-black/60">One achievement per line</span>
                   </div>
                   <Textarea
                     value={edu.achievements?.join('\n')}
-                    onChange={(e) => updateEducation(index, 'achievements', 
+                    onChange={(e) => updateEducation(index, 'achievements',
                       e.target.value.split('\n').filter(Boolean)
                     )}
                     placeholder="• Dean's List 2020-2021&#10;• President of Computer Science Club&#10;• First Place in Hackathon 2022"
-                    className="min-h-[100px] bg-white/50 border-gray-200 rounded-md
-                      focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20
-                      hover:border-indigo-500/30 hover:bg-white/60 transition-colors
-                      placeholder:text-gray-400 text-sm"
+                    className="min-h-[100px] bg-white border border-black/50 rounded-none
+                      focus:border-black focus:ring-0
+                      placeholder:text-gray-400 text-sm font-['Times_New_Roman',_Times,_serif]"
                   />
                 </div>
               </div>
@@ -200,10 +193,10 @@ export function ProfileEducationForm({ education, onChange }: ProfileEducationFo
         ))}
       </Accordion>
 
-      <Button 
-        variant="outline" 
+      <Button
+        variant="outline"
         onClick={addEducation}
-        className="w-full bg-gradient-to-r from-indigo-500/5 via-indigo-500/10 to-blue-500/5 hover:from-indigo-500/10 hover:via-indigo-500/15 hover:to-blue-500/10 border-dashed border-indigo-500/30 hover:border-indigo-500/40 text-indigo-700 hover:text-indigo-800 transition-all duration-300 h-8 text-sm"
+        className="w-full bg-white hover:bg-gray-50 border-dashed border border-black/50 rounded-none text-black transition-all h-8 text-sm font-['Times_New_Roman',_Times,_serif]"
       >
         <Plus className="h-3.5 w-3.5 mr-1.5" />
         Add Education

@@ -27,7 +27,7 @@ export function PricingPlans() {
   // Refs for intersection observer
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-  
+
   // Define pricing plans data for easier maintenance
   const plans = useMemo<PricingPlan[]>(() => [
     {
@@ -55,14 +55,14 @@ export function PricingPlans() {
         { text: "Access to all premium AI models", highlight: true },
         { text: "Unlimited base resumes", highlight: true },
         { text: "Unlimited tailored resumes", highlight: true },
-        { text: "Support an independent student developer ❤️" },
+        { text: "Support an independent student developer" },
       ],
       ctaText: "Get Started",
       ctaLink: "/auth/register",
     }
   ], []);
 
-  // Animation variants - simplified for performance
+  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -83,22 +83,18 @@ export function PricingPlans() {
   // Component for plan features with consistent styling
   const FeatureItem = ({ feature }: { feature: PlanFeature }) => (
     <div className="flex items-start">
-      <Check className={`h-5 w-5 ${feature.highlight ? "text-indigo-600" : "text-purple-600"} mr-3 mt-0.5 flex-shrink-0`} />
-      <span className={feature.highlight ? "font-medium" : ""}>{feature.text}</span>
+      <Check className={`h-5 w-5 ${feature.highlight ? "text-primary" : "text-muted-foreground"} mr-3 mt-0.5 flex-shrink-0`} />
+      <span className={`font-body ${feature.highlight ? "font-medium" : ""}`}>{feature.text}</span>
     </div>
   );
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      className="py-24 md:py-32 px-4 relative overflow-hidden scroll-mt-20" 
+      className="py-24 md:py-32 px-4 relative overflow-hidden scroll-mt-20"
       id="pricing"
       aria-labelledby="pricing-heading"
     >
-      {/* Background decoration elements - simplified */}
-      <div aria-hidden="true" className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-purple-100/20"></div>
-      <div aria-hidden="true" className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-teal-100/20"></div>
-      
       {/* Heading */}
       <div className="relative z-10 max-w-3xl mx-auto text-center mb-16">
         <motion.div
@@ -107,31 +103,31 @@ export function PricingPlans() {
           transition={{ duration: 0.6 }}
           className="flex justify-center gap-3 mb-4"
         >
-          <span className="px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-sm text-teal-700">
+          <span className="px-3 py-1 bg-secondary text-foreground text-sm border-2 border-foreground font-serif uppercase tracking-wide">
             Simple Pricing
           </span>
         </motion.div>
-        
+
         <motion.h2
           id="pricing-heading"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-4xl md:text-5xl font-bold tracking-tight text-indigo-600"
+          className="text-4xl md:text-5xl font-bold tracking-tight font-serif text-foreground"
         >
           Choose Your Plan
         </motion.h2>
-        
+
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-lg md:text-xl text-muted-foreground mt-4 max-w-2xl mx-auto"
+          className="text-lg md:text-xl text-muted-foreground mt-4 max-w-2xl mx-auto font-body"
         >
           Select the perfect plan for your needs with transparent pricing and no hidden fees
         </motion.p>
       </div>
-      
+
       {/* Pricing Cards Grid */}
       <motion.div
         className="relative z-10 max-w-5xl mx-auto grid md:grid-cols-2 gap-8 lg:gap-12"
@@ -144,10 +140,10 @@ export function PricingPlans() {
             key={plan.name}
             variants={itemVariants}
             className={`
-              relative rounded-2xl p-8 md:p-10 transition-all duration-300 hover:-translate-y-1 overflow-hidden
-              ${plan.popular 
-                ? "bg-indigo-50/50 border border-indigo-200 shadow-md hover:shadow-lg" 
-                : "bg-white border border-gray-200 shadow-md hover:shadow-lg"
+              relative p-8 md:p-10 transition-all duration-300 hover:-translate-y-1 overflow-hidden
+              ${plan.popular
+                ? "bg-card border-2 border-foreground shadow-lg"
+                : "bg-card border-2 border-border shadow-md hover:border-foreground"
               }
             `}
             aria-label={`${plan.name} plan for ${plan.price}${plan.period || ""}`}
@@ -155,49 +151,45 @@ export function PricingPlans() {
             {/* Popular plan indicator */}
             {plan.popular && (
               <>
-                <div aria-hidden="true" className="absolute right-0 top-0 w-full h-1 bg-indigo-600"></div>
-                <div className="absolute top-3 right-3 px-2 py-1 rounded-full bg-indigo-100 border border-indigo-200 text-xs font-medium text-indigo-700 flex items-center gap-1">
+                <div aria-hidden="true" className="absolute right-0 top-0 w-full h-1 bg-primary"></div>
+                <div className="absolute top-3 right-3 px-2 py-1 bg-primary text-primary-foreground text-xs font-serif uppercase tracking-wide flex items-center gap-1 border border-foreground">
                   <Sparkles className="h-3 w-3" />
                   <span>{plan.badge}</span>
                 </div>
               </>
             )}
-            
+
             {/* Plan name badge */}
-            <div className="px-3 py-1 w-fit rounded-full bg-indigo-50 border border-indigo-200 text-sm text-indigo-700 mb-4">
+            <div className="px-3 py-1 w-fit bg-secondary text-foreground text-sm font-serif uppercase tracking-wide border-2 border-foreground mb-4">
               {plan.name}
             </div>
-            
+
             {/* Price display */}
             <div className="flex items-baseline">
-              <h3 className="text-4xl font-bold text-indigo-600">
+              <h3 className="text-4xl font-bold font-serif text-foreground">
                 {plan.price}
               </h3>
-              {plan.period && <span className="text-muted-foreground ml-1">{plan.period}</span>}
+              {plan.period && <span className="text-muted-foreground ml-1 font-body">{plan.period}</span>}
             </div>
-            
-            <p className="text-muted-foreground mt-2 mb-6">{plan.description}</p>
-            
+
+            <p className="text-muted-foreground mt-2 mb-6 font-body">{plan.description}</p>
+
             {/* CTA button */}
             <AuthDialog>
-              <button 
+              <button
                 className={`
-                  block w-full py-3 rounded-lg font-medium text-center transition-all duration-300 hover:-translate-y-1 mb-8
-                  ${plan.ctaSecondary 
-                    ? "bg-white border border-indigo-200 hover:bg-indigo-50" 
-                    : "bg-indigo-600 text-white shadow-sm hover:shadow-md"
+                  block w-full py-3 font-serif font-semibold uppercase tracking-wider text-center transition-all duration-300 hover:-translate-y-1 mb-8 border-2 border-foreground
+                  ${plan.ctaSecondary
+                    ? "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                    : "bg-primary text-primary-foreground shadow-md hover:shadow-lg"
                   }
                 `}
                 aria-label={`${plan.ctaText} with the ${plan.name} plan`}
               >
-                {plan.ctaSecondary ? (
-                  <span className="text-indigo-600">
-                    {plan.ctaText}
-                  </span>
-                ) : plan.ctaText}
+                {plan.ctaText}
               </button>
             </AuthDialog>
-            
+
             {/* Features list */}
             <div className="space-y-3">
               {plan.features.map((feature, i) => (
@@ -211,4 +203,4 @@ export function PricingPlans() {
   );
 }
 
-export default PricingPlans; 
+export default PricingPlans;

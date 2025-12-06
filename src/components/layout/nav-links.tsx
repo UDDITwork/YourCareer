@@ -25,7 +25,7 @@ function NavLink({ href, children, className }: NavLinkProps) {
       href={href}
       onClick={handleClick}
       className={cn(
-        "text-sm font-medium text-muted-foreground/90 hover:text-foreground transition-colors duration-200",
+        "text-sm font-serif font-medium text-muted-foreground hover:text-primary transition-colors duration-200 uppercase tracking-wider",
         className
       )}
     >
@@ -44,4 +44,4 @@ export function NavLinks() {
       <NavLink href="/blog">Blog</NavLink>
     </div>
   );
-} 
+}

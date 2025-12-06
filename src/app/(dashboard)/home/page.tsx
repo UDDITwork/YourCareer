@@ -1,18 +1,18 @@
 /**
  * Home Page Component
- * 
+ *
  * This is the main dashboard page of the Resume AI application. It displays:
  * - User profile information
  * - Quick stats (profile score, resume counts, job postings)
  * - Base resume management
  * - Tailored resume management
- * 
- * The page implements a soft gradient minimalism design with floating orbs
- * and mesh overlay for visual interest.
+ *
+ * The page implements a 1980s magazine editorial design with clean typography
+ * and warm, vintage color palette.
  */
 
 import { redirect } from "next/navigation";
-import {User } from "lucide-react";
+import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ProfileRow } from "@/components/dashboard/profile-row";
@@ -22,16 +22,10 @@ import { ApiKeyAlert } from "@/components/dashboard/api-key-alert";
 import { type SortOption, type SortDirection } from "@/components/resume/management/resume-sort-controls";
 import type { ResumeSummary } from "@/lib/types";
 import { ResumesSection } from "@/components/dashboard/resumes-section";
+import { CareerSessionsSection } from "@/components/dashboard/career-sessions-section";
 import { getDashboardData } from "@/utils/actions";
 import { checkSubscriptionPlan } from "@/utils/actions/stripe/actions";
-
-
-
-
-
-
-
-
+import { getCareerSessions } from "@/utils/actions/career/actions";
 
 export default async function Home({
   searchParams,
@@ -51,10 +45,12 @@ export default async function Home({
 
   let data;
   let subscription: Awaited<ReturnType<typeof checkSubscriptionPlan>> = fallbackSubscription;
+  let careerSessions: Awaited<ReturnType<typeof getCareerSessions>> = [];
   try {
-    [data, subscription] = await Promise.all([
+    [data, subscription, careerSessions] = await Promise.all([
       getDashboardData(),
-      checkSubscriptionPlan().catch(() => fallbackSubscription)
+      checkSubscriptionPlan().catch(() => fallbackSubscription),
+      getCareerSessions().catch(() => [])
     ]);
     if (!data.profile) {
       redirect("/");
@@ -86,38 +82,33 @@ export default async function Home({
         case 'createdAt':
         default:
           return modifier * (new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-      
-    }
+      }
     });
   }
-
 
   // Sort both resume lists
   const baseResumes = sortResumes(unsortedBaseResumes, baseSort, baseDirection);
   const tailoredResumes = sortResumes(unsortedTailoredResumes, tailoredSort, tailoredDirection);
-  
+
   // Check if user is on Pro plan
   const isProPlan = subscription.plan === 'pro';
 
-  // console.log(subscription);
-  
   // Free plan limits
   const canCreateBase = isProPlan || baseResumesCount < 2;
   const canCreateTailored = isProPlan || tailoredResumesCount < 4;
 
-
   // Display a friendly message if no profile exists
   if (!profile) {
     return (
-      <main className="min-h-screen p-6 md:p-8 lg:p-10 relative flex items-center justify-center">
-        <Card className="max-w-md w-full p-8 bg-white/80 backdrop-blur-xl border-white/40 shadow-2xl">
+      <main className="min-h-screen p-6 md:p-8 lg:p-10 relative flex items-center justify-center bg-white font-['Times_New_Roman',_Times,_serif]">
+        <Card className="max-w-md w-full p-8 bg-white border border-black/50 rounded-none shadow-none">
           <div className="text-center space-y-4">
-            <User className="w-12 h-12 text-muted-foreground mx-auto" />
-            <h2 className="text-2xl font-semibold text-gray-800">Profile Not Found</h2>
-            <p className="text-muted-foreground">
+            <User className="w-12 h-12 text-black/60 mx-auto" />
+            <h2 className="text-2xl font-bold text-black uppercase tracking-wide">Profile Not Found</h2>
+            <p className="text-black/60">
               We couldn&apos;t find your profile information. Please contact support for assistance.
             </p>
-            <Button className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white">
+            <Button className="w-full bg-black text-white border border-black rounded-none hover:bg-gray-800 uppercase tracking-wider">
               Contact Support
             </Button>
           </div>
@@ -127,50 +118,35 @@ export default async function Home({
   }
 
   return (
-    
-    <main className="min-h-screen relative sm:pb-12 pb-40">
-
+    <main className="min-h-screen relative sm:pb-12 pb-40 bg-white font-['Times_New_Roman',_Times,_serif]">
       {/* Welcome Dialog for New Signups */}
       <WelcomeDialog isOpen={!!isNewSignup} />
-      
-      {/* Gradient Background */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-50/50 via-sky-50/50 to-violet-50/50" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:14px_24px]" />
-        {/* Animated Gradient Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-teal-200/20 to-cyan-200/20 rounded-full blur-3xl animate-float-slow" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-purple-200/20 to-indigo-200/20 rounded-full blur-3xl animate-float-slower" />
-      </div>
 
       {/* Content */}
       <div className="relative z-10">
-      {/* Profile Row Component */}
-      <ProfileRow profile={profile} />
-        
-        <div className="pl-2 sm:pl-0 sm:container sm:max-none  max-w-7xl mx-auto  lg:px-8 md:px-8 sm:px-6 pt-4 ">  
+        {/* Profile Row Component */}
+        <ProfileRow profile={profile} />
+
+        <div className="pl-2 sm:pl-0 sm:container sm:max-none max-w-7xl mx-auto lg:px-8 md:px-8 sm:px-6 pt-4">
           {/* Profile Overview */}
           <div className="mb-6 space-y-4">
             {/* API Key Alert */}
-            { !isProPlan && <ApiKeyAlert />}
-            
-            {/* Greeting & Edit Button */}
-            <div className="flex items-center justify-between">
+            {!isProPlan && <ApiKeyAlert />}
+
+            {/* Greeting & Edit Button - Magazine style */}
+            <div className="flex items-center justify-between border-b border-black/50 pb-4">
               <div>
-                <h1 className="text-2xl font-semibold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-                  {getGreeting()}, {profile.first_name}
+                <h1 className="text-2xl font-bold text-black">
+                  {getGreeting()}, <span className="text-black italic">{profile.first_name}</span>
                 </h1>
-                <p className="text-sm text-muted-foreground mt-0.5">
+                <p className="text-sm text-black/60 mt-0.5">
                   Welcome to your resume dashboard
                 </p>
               </div>
             </div>
 
-            
-
             {/* Resume Bookshelf */}
             <div className="">
-
-
               {/* Base Resumes Section */}
               <ResumesSection
                 type="base"
@@ -183,9 +159,13 @@ export default async function Home({
                 canCreateMore={canCreateBase}
               />
 
-              {/* Thin Divider */}
-              <div className="relative py-2">
-                <div className="h-px bg-gradient-to-r from-transparent via-purple-300/30 to-transparent" />
+              {/* Magazine-style Divider */}
+              <div className="relative py-4">
+                <div className="flex items-center">
+                  <div className="flex-1 h-[1px] bg-black/20" />
+                  <div className="w-3 h-[1px] bg-black mx-2" />
+                  <div className="flex-1 h-[1px] bg-black/20" />
+                </div>
               </div>
 
               {/* Tailored Resumes Section */}
@@ -200,6 +180,18 @@ export default async function Home({
                 baseResumes={baseResumes}
                 canCreateMore={canCreateTailored}
               />
+
+              {/* Magazine-style Divider */}
+              <div className="relative py-4">
+                <div className="flex items-center">
+                  <div className="flex-1 h-[1px] bg-black/20" />
+                  <div className="w-3 h-[1px] bg-black mx-2" />
+                  <div className="flex-1 h-[1px] bg-black/20" />
+                </div>
+              </div>
+
+              {/* Career Counselling Section */}
+              <CareerSessionsSection sessions={careerSessions} />
             </div>
           </div>
         </div>

@@ -18,6 +18,11 @@ const config = {
   		}
   	},
   	extend: {
+  		fontFamily: {
+  			serif: ['Playfair Display', 'Georgia', 'serif'],
+  			body: ['Source Serif 4', 'Georgia', 'Times New Roman', 'serif'],
+  			mono: ['IBM Plex Mono', 'monospace'],
+  		},
   		colors: {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
@@ -51,6 +56,82 @@ const config = {
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
+  			},
+  			/* 1980s Magazine Colors */
+  			cream: {
+  				50: '#fefdfb',
+  				100: '#fdf9f3',
+  				200: '#faf3e6',
+  				300: '#f5e9d4',
+  				400: '#eddcbc',
+  				500: '#e3cca0',
+  				600: '#d4b77f',
+  				700: '#c19f5c',
+  				800: '#a58343',
+  				900: '#886b38',
+  			},
+  			wine: {
+  				50: '#fdf2f4',
+  				100: '#fce7ea',
+  				200: '#f9d2d9',
+  				300: '#f4adb9',
+  				400: '#ec7d91',
+  				500: '#df506b',
+  				600: '#c93352',
+  				700: '#a82744',
+  				800: '#8c233d',
+  				900: '#772139',
+  			},
+  			sepia: {
+  				50: '#faf8f5',
+  				100: '#f3efe8',
+  				200: '#e5ddd0',
+  				300: '#d4c6b0',
+  				400: '#c0aa8d',
+  				500: '#b09574',
+  				600: '#a38363',
+  				700: '#886b52',
+  				800: '#705847',
+  				900: '#5c493c',
+  			},
+  			charcoal: {
+  				50: '#f6f5f4',
+  				100: '#e7e5e3',
+  				200: '#d0ccc7',
+  				300: '#b4aea6',
+  				400: '#968d83',
+  				500: '#7b7268',
+  				600: '#635c54',
+  				700: '#514b45',
+  				800: '#45403b',
+  				900: '#3c3834',
+  			},
+  			/* Brown color palette to replace violet */
+  			brown: {
+  				50: '#fdf8f6',
+  				100: '#f2e8e5',
+  				200: '#eaddd7',
+  				300: '#e0cec7',
+  				400: '#d2bab0',
+  				500: '#bfa094',
+  				600: '#a18072',
+  				700: '#977669',
+  				800: '#846358',
+  				900: '#43302b',
+  				950: '#2d1f1b',
+  			},
+  			/* Amber/orange accent color */
+  			amber: {
+  				50: '#fffbeb',
+  				100: '#fef3c7',
+  				200: '#fde68a',
+  				300: '#fcd34d',
+  				400: '#fbbf24',
+  				500: '#f59e0b',
+  				600: '#d97706',
+  				700: '#b45309',
+  				800: '#92400e',
+  				900: '#78350f',
   			}
   		},
   		borderRadius: {

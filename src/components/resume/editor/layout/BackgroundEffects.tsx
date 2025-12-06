@@ -5,39 +5,17 @@ interface BackgroundEffectsProps {
   isBaseResume?: boolean;
 }
 
-export function BackgroundEffects({ className, isBaseResume = true }: BackgroundEffectsProps) {
+export function BackgroundEffects({ className }: BackgroundEffectsProps) {
   return (
-    <div className={cn("fixed inset-0 z-0  overflow-hidden  h-[calc(100vh)]", className)}>
-      {/* Base Gradient */}
-      <div className={cn(
-        "absolute inset-0 bg-gradient-to-br",
-        isBaseResume 
-          ? "from-rose-50/50 via-sky-50/50 to-violet-50/50"
-          : "from-pink-100/80 via-rose-50/80 to-pink-100/80"
-      )} />
-      
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:14px_24px]" />
-      
-      {/* Animated Gradient Orbs */}
-      <div 
-        className={cn(
-          "absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl animate-float-slow",
-          isBaseResume 
-            ? "bg-gradient-to-br from-teal-200/20 to-cyan-200/20"
-            : "bg-gradient-to-br from-pink-300/30 to-rose-300/30"
-        )}
-        style={{ willChange: 'transform' }}
-      />
-      <div 
-        className={cn(
-          "absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-3xl animate-float-slower",
-          isBaseResume 
-            ? "bg-gradient-to-br from-purple-200/20 to-indigo-200/20"
-            : "bg-gradient-to-br from-rose-300/30 to-pink-300/30"
-        )}
-        style={{ willChange: 'transform' }}
-      />
+    <div className={cn("fixed inset-0 z-0 overflow-hidden h-[calc(100vh)]", className)}>
+      {/* Solid cream background - 1980s magazine paper */}
+      <div className="absolute inset-0 bg-background" />
+
+      {/* Subtle paper texture */}
+      <div className="absolute inset-0 opacity-30 bg-[url('data:image/svg+xml,%3Csvg viewBox=%270 0 200 200%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cfilter id=%27noise%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.9%27 numOctaves=%274%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23noise)%27 opacity=%270.05%27/%3E%3C/svg%3E')]" />
+
+      {/* Subtle editorial grid lines */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--foreground)/0.02)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.02)_1px,transparent_1px)] bg-[size:48px_48px]" />
     </div>
   );
 } 
