@@ -1,6 +1,8 @@
-
 import { OptimizedSubscriptionPage } from '@/components/pricing/optimized-subscription-page';
 import { getSubscriptionStatus} from '@/utils/actions/stripe/actions';
+
+// Force dynamic rendering since this page uses cookies for authentication
+export const dynamic = 'force-dynamic';
 
 interface Profile {
   subscription_plan: string | null;

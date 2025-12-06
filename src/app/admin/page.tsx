@@ -1,5 +1,8 @@
 // Removed getUserId import
 import UsersTable from "./components/users-table";
+
+// Force dynamic rendering since this page uses cookies for authentication
+export const dynamic = 'force-dynamic';
 import {
     getTotalUserCount,
     getTotalResumeCount,
