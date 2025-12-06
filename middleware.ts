@@ -17,6 +17,6 @@ export const config = {
      * - blog (blog section)
      * Run on all other routes to protect them
      g*/
-    '/((?!_next/static|_next/image|favicon.ico|api/webhooks|$|blog(?:/.*)?|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|api/webhooks|$|blog(?:/.*)?|check(?:/.*)?|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
