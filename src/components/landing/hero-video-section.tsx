@@ -18,7 +18,7 @@ export function HeroVideoSection() {
       {/* Section Header */}
       <div className="text-center mb-12 max-w-3xl mx-auto">
         <h2 className="text-2xl sm:text-3xl font-semibold mb-4 bg-gradient-to-r from-violet-600 via-blue-600 to-violet-600 bg-clip-text text-transparent">
-          See ResumeLM in Action
+          See YourCareer in Action
         </h2>
         <p className="text-muted-foreground text-lg">
           Watch how our AI-powered platform transforms your resume in minutes
