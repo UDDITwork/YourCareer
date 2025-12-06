@@ -35,7 +35,7 @@ export function Footer({ variant = 'fixed' }: FooterProps) {
               <Twitter className="h-5 w-5 md:h-4 md:w-4" />
             </Link>
             <Link
-              href="https://linkedin.com/in/uddit"
+              href="https://linkedin.com/in/lorduddit-/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors p-1"
@@ -43,7 +43,7 @@ export function Footer({ variant = 'fixed' }: FooterProps) {
               <Linkedin className="h-5 w-5 md:h-4 md:w-4" />
             </Link>
             <Link
-              href="https://github.com/uddit"
+              href="https://github.com/UDDITwork"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors p-1"

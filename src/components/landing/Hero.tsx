@@ -51,7 +51,7 @@ export function Hero() {
             </button>
           </AuthDialog>
           <Link
-            href="https://github.com/olyaiy/resume-lm"
+            href="https://github.com/UDDITwork"
             target="_blank"
             rel="noopener noreferrer"
             className="px-6 py-3 bg-secondary text-secondary-foreground border-2 border-foreground font-serif font-medium uppercase tracking-wider transition-all duration-300 hover:-translate-y-1 hover:bg-secondary/80"

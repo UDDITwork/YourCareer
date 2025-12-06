@@ -251,7 +251,7 @@ const FeatureHighlights = () => {
               </button>
             </AuthDialog>
             <Link
-              href="https://github.com/olyaiy/resume-lm"
+              href="https://github.com/UDDITwork"
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-secondary text-secondary-foreground text-lg font-serif font-medium uppercase tracking-wider border-2 border-foreground transition-all duration-300 hover:-translate-y-1 hover:bg-secondary/80"
