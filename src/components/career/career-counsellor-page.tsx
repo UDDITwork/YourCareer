@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { CareerChat } from "./career-chat";
 import { CareerSessionsList } from "./career-sessions-list";
+import { CareerAnalyticsCharts } from "./career-analytics-charts";
 import { CareerSessionSummary } from "@/lib/types";
 import { History, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ export function CareerCounsellorPage({ initialSessions, initialSessionId }: Care
   const [sessions, setSessions] = useState<CareerSessionSummary[]>(initialSessions);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(initialSessionId || null);
   const [showHistory, setShowHistory] = useState(false);
+  const [chatMessages, setChatMessages] = useState<Array<{ role: string; content: string }>>([]);
 
   const handleNewSession = () => {
     setActiveSessionId(null);
@@ -109,6 +111,18 @@ export function CareerCounsellorPage({ initialSessions, initialSessionId }: Care
             </motion.div>
           )}
 
+          {/* Analytics Charts - Show when there are enough messages */}
+          {chatMessages.length >= 2 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-6"
+            >
+              <CareerAnalyticsCharts messages={chatMessages} sessionId={activeSessionId} />
+            </motion.div>
+          )}
+
           {/* Chat Interface */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -119,6 +133,7 @@ export function CareerCounsellorPage({ initialSessions, initialSessionId }: Care
             <CareerChat
               sessionId={activeSessionId}
               onSessionCreated={handleSessionCreated}
+              onMessagesChange={(messages) => setChatMessages(messages.map(m => ({ role: m.role, content: m.content })))}
             />
           </motion.div>
         </div>

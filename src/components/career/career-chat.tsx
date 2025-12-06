@@ -34,9 +34,10 @@ const QUICK_SUGGESTIONS = [
 interface CareerChatProps {
   sessionId: string | null;
   onSessionCreated?: (session: CareerSessionSummary) => void;
+  onMessagesChange?: (messages: Message[]) => void;
 }
 
-export function CareerChat({ sessionId, onSessionCreated }: CareerChatProps) {
+export function CareerChat({ sessionId, onSessionCreated, onMessagesChange }: CareerChatProps) {
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(sessionId);
   const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [isLoadingSession, setIsLoadingSession] = useState(false);
@@ -108,6 +109,11 @@ export function CareerChat({ sessionId, onSessionCreated }: CareerChatProps) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Notify parent component of message changes
+  useEffect(() => {
+    onMessagesChange?.(messages);
+  }, [messages, onMessagesChange]);
 
   // Adjust textarea height
   const adjustTextareaHeight = useCallback(() => {
