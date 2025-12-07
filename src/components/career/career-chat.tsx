@@ -215,26 +215,70 @@ export function CareerChat({ sessionId, onSessionCreated, onMessagesChange }: Ca
       await importResume(extractedProfile);
       toast.success('Profile imported successfully! Your profile has been updated.');
 
-      // Start the conversation with the extracted profile info
-      const profileSummary = [];
+      // Build comprehensive profile summary for intelligent career guidance
+      const profileDetails: string[] = [];
+
+      // Name
       if (extractedProfile.first_name || extractedProfile.last_name) {
-        profileSummary.push(`Name: ${extractedProfile.first_name || ''} ${extractedProfile.last_name || ''}`.trim());
-      }
-      if (extractedProfile.education && extractedProfile.education.length > 0) {
-        const latestEdu = extractedProfile.education[0];
-        profileSummary.push(`Education: ${latestEdu.degree} in ${latestEdu.field} from ${latestEdu.school}`);
-      }
-      if (extractedProfile.work_experience && extractedProfile.work_experience.length > 0) {
-        const latestJob = extractedProfile.work_experience[0];
-        profileSummary.push(`Current/Recent Role: ${latestJob.position} at ${latestJob.company}`);
-      }
-      if (extractedProfile.skills && extractedProfile.skills.length > 0) {
-        const allSkills = extractedProfile.skills.flatMap(s => s.items).slice(0, 5);
-        profileSummary.push(`Key Skills: ${allSkills.join(', ')}`);
+        profileDetails.push(`**Name:** ${extractedProfile.first_name || ''} ${extractedProfile.last_name || ''}`.trim());
       }
 
-      if (profileSummary.length > 0) {
-        const introMessage = `I just uploaded my resume. Here's a summary of my profile:\n\n${profileSummary.join('\n')}\n\nPlease help me with career guidance based on my background.`;
+      // Work Experience - include ALL experiences for context
+      if (extractedProfile.work_experience && extractedProfile.work_experience.length > 0) {
+        const expDetails = extractedProfile.work_experience.map((exp, idx) => {
+          const details = [`${exp.position} at ${exp.company}`];
+          if (exp.date) details.push(`(${exp.date})`);
+          if (exp.technologies && exp.technologies.length > 0) {
+            details.push(`- Technologies: ${exp.technologies.join(', ')}`);
+          }
+          return details.join(' ');
+        });
+        profileDetails.push(`**Work Experience (${extractedProfile.work_experience.length} roles):**\n${expDetails.map((e, i) => `${i + 1}. ${e}`).join('\n')}`);
+      }
+
+      // Education - include all
+      if (extractedProfile.education && extractedProfile.education.length > 0) {
+        const eduDetails = extractedProfile.education.map(edu => {
+          const parts = [`${edu.degree}`];
+          if (edu.field) parts.push(`in ${edu.field}`);
+          parts.push(`from ${edu.school}`);
+          if (edu.date) parts.push(`(${edu.date})`);
+          return parts.join(' ');
+        });
+        profileDetails.push(`**Education:**\n${eduDetails.map((e, i) => `${i + 1}. ${e}`).join('\n')}`);
+      }
+
+      // Skills - categorized
+      if (extractedProfile.skills && extractedProfile.skills.length > 0) {
+        const skillDetails = extractedProfile.skills.map(s =>
+          `${s.category}: ${s.items.join(', ')}`
+        );
+        profileDetails.push(`**Skills:**\n${skillDetails.join('\n')}`);
+      }
+
+      // Projects if any
+      if (extractedProfile.projects && extractedProfile.projects.length > 0) {
+        const projectNames = extractedProfile.projects.slice(0, 3).map(p => p.name);
+        profileDetails.push(`**Notable Projects:** ${projectNames.join(', ')}`);
+      }
+
+      if (profileDetails.length > 0) {
+        // Determine career stage from data
+        const hasWorkExp = extractedProfile.work_experience && extractedProfile.work_experience.length > 0;
+        const expCount = extractedProfile.work_experience?.length || 0;
+
+        let careerContext = '';
+        if (hasWorkExp) {
+          if (expCount >= 3) {
+            careerContext = 'I am an experienced professional with multiple roles under my belt.';
+          } else if (expCount >= 1) {
+            careerContext = 'I am a working professional looking for career guidance.';
+          }
+        } else if (extractedProfile.education && extractedProfile.education.length > 0) {
+          careerContext = 'I am a recent graduate/student seeking career direction.';
+        }
+
+        const introMessage = `I just uploaded my resume. Here's my complete professional profile:\n\n${profileDetails.join('\n\n')}\n\n${careerContext}\n\nBased on my background, please provide intelligent, contextual career guidance. Ask me relevant questions about my career goals, challenges, or aspirations - but please don't ask basic questions that my profile already answers.`;
         handleSubmit(introMessage);
       }
     } catch (error) {
