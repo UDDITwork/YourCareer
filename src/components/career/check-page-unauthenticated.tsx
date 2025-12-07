@@ -38,8 +38,8 @@ export function CheckPageUnauthenticated() {
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden check-page-container">
-      {/* World Map - Hidden on mobile, visible on desktop */}
-      <div className="hidden md:block">
+      {/* World Map - Hidden on mobile, visible on desktop - Appears first */}
+      <div className="hidden md:block absolute inset-0 z-0 pointer-events-none">
         <WorldMapBackground isVisible={mapVisible} />
       </div>
 

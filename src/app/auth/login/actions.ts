@@ -3,6 +3,7 @@
 import { createClient, createServiceClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { getAuthenticatedClient, getServiceClient } from "@/utils/actions/utils/supabase";
+import { getSiteUrl } from "@/utils/get-site-url";
 
 interface AuthResult {
   success: boolean;
@@ -43,7 +44,7 @@ export async function signup(formData: FormData): Promise<AuthResult> {
       data: {
         full_name: formData.get('name') as string,
       },
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm`
+      emailRedirectTo: `${getSiteUrl()}/auth/confirm`
     }
   }
   const { error: signupError } = await supabase.auth.signUp(data);
@@ -75,7 +76,7 @@ export async function resetPasswordForEmail(formData: FormData): Promise<AuthRes
   const email = formData.get('email') as string;
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/update-password`,
+    redirectTo: `${getSiteUrl()}/auth/update-password`,
   });
 
   if (error) {
@@ -128,7 +129,7 @@ export async function signInWithGithub(): Promise<GithubAuthResult> {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+        redirectTo: `${getSiteUrl()}/auth/callback`,
         queryParams: {
           next: '/'
         }

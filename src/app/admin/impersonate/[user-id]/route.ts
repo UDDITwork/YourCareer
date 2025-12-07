@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/utils/supabase/server'
 import { ensureAdmin } from '../../actions' // relative to this file
+import { getSiteUrl } from '@/utils/get-site-url'
 
 /**
  * GET /admin/impersonate/:user-id
@@ -47,7 +48,7 @@ export async function GET(
     type: 'magiclink',
     email: authUser.user.email!, // email can be safely asserted – Supabase guarantees it on users
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      redirectTo: `${getSiteUrl()}/auth/callback`,
     },
   })
 

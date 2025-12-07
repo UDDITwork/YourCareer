@@ -9,10 +9,10 @@ interface WorldMapBackgroundProps {
 export function WorldMapBackground({ isVisible }: WorldMapBackgroundProps) {
   return (
     <motion.div
-      initial={{ opacity: 1 }}
+      initial={false}
       animate={{ opacity: isVisible ? 1 : 0 }}
       transition={{ duration: 1.5 }}
-      className="absolute inset-0 left-0 w-[60%] h-full overflow-hidden bg-white"
+      className="absolute inset-0 left-0 w-[60%] h-full overflow-hidden bg-white z-0"
     >
       {/* World map image with better visibility */}
       <div
