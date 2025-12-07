@@ -1,15 +1,17 @@
-# ResumeLM - Free AI Resume Builder | Create ATS-Optimized Resumes in Minutes
+# YourCareer - Free AI Resume Builder | Create ATS-Optimized Resumes in Minutes
 
 <div align="center">
 
-![ResumeLM Logo](public/og.webp)
+![YourCareer Logo](public/og.webp)
 
 **🚀 The AI-Powered Resume Builder That Gets You Hired**
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-resumelm.com-blue?style=for-the-badge)](https://resumelm.com)
-[![GitHub Stars](https://img.shields.io/github/stars/olyaiy/resume-lm?style=for-the-badge)](https://github.com/olyaiy/resume-lm/stargazers)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-uddit.site-blue?style=for-the-badge)](https://uddit.site)
+[![GitHub Stars](https://img.shields.io/github/stars/UDDITwork/YourCareer?style=for-the-badge)](https://github.com/UDDITwork/YourCareer/stargazers)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+
+**Created by [Uddit](https://uddit.site) | [LinkedIn](https://linkedin.com/in/lorduddit-/) | [GitHub](https://github.com/UDDITwork)**
 
 </div>
 
@@ -23,9 +25,11 @@
 
 </div>
 
-## 🎯 Why Choose ResumeLM?
+## 🎯 Why Choose YourCareer?
 
-**ResumeLM** is a free, open-source AI resume builder that helps job seekers create professional, ATS-optimized resumes that increase interview chances by up to **3x**. Our intelligent platform combines cutting-edge AI technology with proven resume best practices to help you land your dream job.
+**YourCareer** is a free, open-source AI resume builder that helps job seekers create professional, ATS-optimized resumes that increase interview chances by up to **3x**. Our intelligent platform combines cutting-edge AI technology with proven resume best practices to help you land your dream job.
+
+**Built by [Uddit](https://uddit.site)** - An AI Engineer passionate about helping students and professionals land their dream tech jobs.
 
 ## ✨ Key Features & Screenshots
 
@@ -65,9 +69,11 @@
 
 ## 🚀 Live Demo & Getting Started
 
-**[Try ResumeLM Now - 100% Free](https://resumelm.com)**
+**[Try YourCareer Now - 100% Free](https://uddit.site)**
 
 No credit card required • No signup fees • Open source
+
+**Visit the creator:** [uddit.site](https://uddit.site) | [LinkedIn](https://linkedin.com/in/lorduddit-/) | [GitHub](https://github.com/UDDITwork)
 
 ## 🛠️ Complete Tech Stack
 
@@ -99,7 +105,7 @@ No credit card required • No signup fees • Open source
 
 ## 📱 Mobile-First Design
 
-ResumeLM is built with a mobile-first approach, ensuring your resume building experience is seamless across all devices:
+YourCareer is built with a mobile-first approach, ensuring your resume building experience is seamless across all devices:
 
 - 📱 **Mobile Optimized** - Full functionality on smartphones
 - 💻 **Desktop Enhanced** - Rich editing experience on larger screens
@@ -127,8 +133,8 @@ ResumeLM is built with a mobile-first approach, ensuring your resume building ex
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/olyaiy/resume-lm.git
-cd resume-lm
+git clone https://github.com/UDDITwork/YourCareer.git
+cd YourCareer
 ```
 
 2. **Install dependencies**
@@ -174,7 +180,7 @@ supabase db push --db-url=your_supabase_db_url schema.sql
 pnpm dev
 ```
 
-Visit `http://localhost:3000` to see your local ResumeLM instance!
+Visit `http://localhost:3000` to see your local YourCareer instance!
 
 ## 📊 Database Architecture
 
@@ -241,6 +247,16 @@ Visit `http://localhost:3000` to see your local ResumeLM instance!
 - Average setup time reduced to just 15 minutes
 - 4.9/5 star rating from active users
 - 500+ professional resumes created monthly
+
+### About the Creator
+
+**Uddit** - AI Engineer with experience in "Patents in AI"
+
+- 🌐 **Website:** [uddit.site](https://uddit.site)
+- 💼 **LinkedIn:** [linkedin.com/in/lorduddit-/](https://linkedin.com/in/lorduddit-/)
+- 💻 **GitHub:** [github.com/UDDITwork](https://github.com/UDDITwork)
+
+YourCareer is an early-stage extension of my personal AI ASSISTANT "Shree" that will be at par with JARVIS. This project was built to help students and developers create ATS-optimized resumes without the hefty subscription costs.
 
 ## 🔮 Roadmap & Future Features
 
@@ -312,9 +328,13 @@ For businesses requiring proprietary licenses or commercial support, please cont
 
 **Ready to land your dream job?**
 
-[![Get Started Free](https://img.shields.io/badge/🚀_Get_Started_Free-resumelm.com-blue?style=for-the-badge&color=6366f1)](https://resumelm.com)
-[![View Source Code](https://img.shields.io/badge/📚_View_Source-GitHub-black?style=for-the-badge&logo=github)](https://github.com/olyaiy/resume-lm)
+[![Get Started Free](https://img.shields.io/badge/🚀_Get_Started_Free-uddit.site-blue?style=for-the-badge&color=6366f1)](https://uddit.site)
+[![View Source Code](https://img.shields.io/badge/📚_View_Source-GitHub-black?style=for-the-badge&logo=github)](https://github.com/UDDITwork/YourCareer)
 
-**Built with ❤️ using Next.js**
+**Built with ❤️ by [Uddit](https://uddit.site) using Next.js**
+
+[![Website](https://img.shields.io/badge/🌐_Website-uddit.site-blue?style=for-the-badge)](https://uddit.site)
+[![LinkedIn](https://img.shields.io/badge/💼_LinkedIn-lorduddit--blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/lorduddit-/)
+[![GitHub](https://img.shields.io/badge/💻_GitHub-UDDITwork-black?style=for-the-badge&logo=github)](https://github.com/UDDITwork)
 
 </div>
