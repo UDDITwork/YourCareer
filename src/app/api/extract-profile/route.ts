@@ -2,37 +2,88 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import Anthropic from '@anthropic-ai/sdk';
 import mammoth from 'mammoth';
-import * as pdfjsLib from 'pdfjs-dist';
 
-// Configure pdf.js worker for serverless environment
-if (typeof window === 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '';
-}
+// LlamaParse API endpoints
+const LLAMA_PARSE_UPLOAD_URL = 'https://api.cloud.llamaindex.ai/api/v1/parsing/upload';
+const LLAMA_PARSE_JOB_URL = 'https://api.cloud.llamaindex.ai/api/v1/parsing/job';
 
-// Parse PDF using pdfjs-dist (works in serverless environments)
-async function parsePDF(buffer: Buffer): Promise<string> {
+// Parse PDF using LlamaParse (LlamaCloud) - handles parsing externally
+async function parsePDFWithLlamaParse(buffer: Buffer, filename: string, apiKey: string): Promise<string> {
   try {
-    const uint8Array = new Uint8Array(buffer);
-    const loadingTask = pdfjsLib.getDocument({
-      data: uint8Array,
-      useSystemFonts: true,
+    // Step 1: Upload file to LlamaParse
+    const formData = new FormData();
+    const blob = new Blob([buffer], { type: 'application/pdf' });
+    formData.append('file', blob, filename);
+
+    const uploadResponse = await fetch(LLAMA_PARSE_UPLOAD_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Accept': 'application/json',
+      },
+      body: formData,
     });
 
-    const pdf = await loadingTask.promise;
-    const textParts: string[] = [];
-
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items
-        .map((item) => ('str' in item ? item.str : ''))
-        .join(' ');
-      textParts.push(pageText);
+    if (!uploadResponse.ok) {
+      const errorText = await uploadResponse.text();
+      console.error('LlamaParse upload error:', errorText);
+      throw new Error(`LlamaParse upload failed: ${uploadResponse.status}`);
     }
 
-    return textParts.join('\n\n');
+    const uploadResult = await uploadResponse.json();
+    const jobId = uploadResult.id;
+
+    if (!jobId) {
+      throw new Error('No job ID returned from LlamaParse');
+    }
+
+    // Step 2: Poll for job completion (max 60 seconds)
+    const maxAttempts = 30;
+    const pollInterval = 2000; // 2 seconds
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      await new Promise(resolve => setTimeout(resolve, pollInterval));
+
+      const statusResponse = await fetch(`${LLAMA_PARSE_JOB_URL}/${jobId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Accept': 'application/json',
+        },
+      });
+
+      if (!statusResponse.ok) {
+        console.error('LlamaParse status check error:', await statusResponse.text());
+        continue;
+      }
+
+      const statusResult = await statusResponse.json();
+
+      if (statusResult.status === 'SUCCESS') {
+        // Step 3: Get the parsed result
+        const resultResponse = await fetch(`${LLAMA_PARSE_JOB_URL}/${jobId}/result/markdown`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Accept': 'application/json',
+          },
+        });
+
+        if (!resultResponse.ok) {
+          throw new Error('Failed to retrieve parsing result');
+        }
+
+        const resultData = await resultResponse.json();
+        return resultData.markdown || resultData.text || '';
+      } else if (statusResult.status === 'ERROR') {
+        throw new Error(`LlamaParse job failed: ${statusResult.error || 'Unknown error'}`);
+      }
+      // Continue polling if status is PENDING or PROCESSING
+    }
+
+    throw new Error('LlamaParse job timed out');
   } catch (error) {
-    console.error('PDF.js parsing error:', error);
+    console.error('LlamaParse error:', error);
     throw error;
   }
 }
@@ -137,6 +188,9 @@ export async function POST(request: Request) {
     const buffer = Buffer.from(await file.arrayBuffer());
     let documentText = '';
 
+    // Get LlamaCloud API key for PDF parsing
+    const llamaCloudApiKey = process.env.LLAMA_CLOUD_API_KEY;
+
     // Parse document based on type
     if (file.type === 'application/pdf') {
       try {
@@ -157,8 +211,17 @@ export async function POST(request: Request) {
           );
         }
 
-        documentText = await parsePDF(buffer);
-        
+        // Check if LlamaCloud API key is available
+        if (!llamaCloudApiKey) {
+          return NextResponse.json(
+            { error: 'PDF parsing service is not configured. Please contact support.' },
+            { status: 500 }
+          );
+        }
+
+        // Use LlamaParse for PDF parsing (handles parsing externally)
+        documentText = await parsePDFWithLlamaParse(buffer, file.name || 'resume.pdf', llamaCloudApiKey);
+
         // Validate extracted text
         if (!documentText || typeof documentText !== 'string') {
           return NextResponse.json(
@@ -168,19 +231,19 @@ export async function POST(request: Request) {
         }
       } catch (pdfError) {
         console.error('PDF parsing error:', pdfError);
-        
+
         // Provide more specific error messages
         const errorMessage = pdfError instanceof Error ? pdfError.message : String(pdfError);
         let userMessage = 'Failed to parse PDF file. Please ensure it is a valid PDF.';
-        
-        if (errorMessage.includes('encrypted') || errorMessage.includes('password')) {
+
+        if (errorMessage.includes('timed out')) {
+          userMessage = 'PDF parsing took too long. Please try again or use a smaller file.';
+        } else if (errorMessage.includes('encrypted') || errorMessage.includes('password')) {
           userMessage = 'The PDF file is password-protected. Please remove the password and try again.';
         } else if (errorMessage.includes('corrupt') || errorMessage.includes('invalid')) {
           userMessage = 'The PDF file appears to be corrupted or invalid. Please try a different PDF file.';
-        } else if (errorMessage.includes('image') || errorMessage.includes('scan')) {
-          userMessage = 'The PDF appears to be image-based (scanned). Please use a text-based PDF or convert it to text first.';
         }
-        
+
         return NextResponse.json(
           { error: userMessage },
           { status: 400 }
