@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "src/app/api/extract-profile/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/career-chat/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/career-report/route.ts": {
+      "maxDuration": 60
+    }
+  }
+}

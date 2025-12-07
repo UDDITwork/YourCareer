@@ -70,11 +70,23 @@ async function parsePDFWithLlamaParse(buffer: Buffer, filename: string, apiKey: 
         });
 
         if (!resultResponse.ok) {
+          const errorText = await resultResponse.text();
+          console.error('LlamaParse result retrieval error:', errorText);
           throw new Error('Failed to retrieve parsing result');
         }
 
         const resultData = await resultResponse.json();
-        return resultData.markdown || resultData.text || '';
+        console.log('LlamaParse result data keys:', Object.keys(resultData));
+
+        // The API returns the markdown in the 'markdown' field
+        const markdownContent = resultData.markdown || resultData.text || '';
+        console.log('Extracted text length:', markdownContent.length);
+
+        if (!markdownContent) {
+          throw new Error('No content extracted from PDF');
+        }
+
+        return markdownContent;
       } else if (statusResult.status === 'ERROR') {
         throw new Error(`LlamaParse job failed: ${statusResult.error || 'Unknown error'}`);
       }
@@ -293,6 +305,8 @@ export async function POST(request: Request) {
     });
 
     // Call Anthropic API to extract profile data
+    console.log('Sending to Anthropic. Document text length:', documentText.length);
+
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 4096,
@@ -303,6 +317,8 @@ export async function POST(request: Request) {
         }
       ],
     });
+
+    console.log('Anthropic response received. Stop reason:', message.stop_reason);
 
     // Extract the text content from the response
     const responseContent = message.content[0];
