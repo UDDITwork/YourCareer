@@ -60,7 +60,7 @@ const careerAnalyticsSchema = z.object({
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { messages, sessionId }: CareerAnalyticsRequest = body;
+    const { messages, sessionId: _sessionId }: CareerAnalyticsRequest = body;
 
     // Validate messages
     if (!messages || !Array.isArray(messages) || messages.length < 2) {
