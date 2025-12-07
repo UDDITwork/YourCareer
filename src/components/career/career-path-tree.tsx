@@ -170,7 +170,8 @@ function getTypeColor(type?: string) {
 }
 
 function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: VerticalTreeNodeProps) {
-  const [isExpanded, setIsExpanded] = useState(level < 2); // Auto-expand first 2 levels
+  // Auto-expand first 2 levels on desktop, first 1 level on mobile
+  const [isExpanded, setIsExpanded] = useState(level < 1);
   const [displayText, setDisplayText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [hasCompleted, setHasCompleted] = useState(false);
@@ -206,7 +207,8 @@ function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: Vertica
         setIsTyping(false);
         setHasCompleted(true);
         onComplete();
-        if (hasChildren && level < 2) {
+        // Auto-expand on desktop for first 2 levels, mobile for first 1 level
+        if (hasChildren && level < 1) {
           setTimeout(() => {
             setIsExpanded(true);
           }, 200);
@@ -225,23 +227,23 @@ function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: Vertica
         animate={{ opacity: isVisible ? 1 : 0, scale: 1, y: 0 }}
         transition={{ duration: 0.4, delay }}
         className={`
-          relative border-[0.5px] border-black rounded-lg p-3 mb-4
+          relative border-[0.5px] border-black rounded-lg p-2 md:p-3 mb-2 md:mb-4
           ${getTypeColor(node.type)}
           ${hasChildren ? 'cursor-pointer hover:shadow-lg transition-all' : ''}
-          min-w-[180px] max-w-[220px] text-center z-10
+          min-w-[140px] md:min-w-[180px] max-w-[160px] md:max-w-[220px] text-center z-10
         `}
         onClick={() => hasChildren && setIsExpanded(!isExpanded)}
       >
         <div className="flex flex-col items-center gap-1">
-          <p className="text-sm font-medium text-black leading-tight">
+          <p className="text-xs md:text-sm font-medium text-black leading-tight">
             {displayText || node.name}
             {isTyping && <span className="ml-1 animate-pulse text-black">|</span>}
           </p>
           {node.duration && (
-            <p className="text-xs text-gray-600">{node.duration}</p>
+            <p className="text-[10px] md:text-xs text-gray-600">{node.duration}</p>
           )}
           {hasChildren && (
-            <span className="text-black text-xs mt-1">
+            <span className="text-black text-[10px] md:text-xs mt-1">
               {isExpanded ? '▼' : '▶'}
             </span>
           )}
@@ -250,7 +252,7 @@ function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: Vertica
 
       {/* Vertical connector line from parent to children */}
       {isExpanded && hasChildren && node.children && (
-        <div className="w-[2px] h-6 bg-black mb-2" />
+        <div className="w-[2px] h-4 md:h-6 bg-black mb-1 md:mb-2" />
       )}
 
       {/* Children - Horizontal Layout (side by side) */}
@@ -261,7 +263,7 @@ function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: Vertica
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="flex flex-wrap items-start justify-center gap-4 relative"
+            className="flex flex-wrap items-start justify-center gap-2 md:gap-4 relative"
           >
             {node.children.map((child, index) => {
               const children = node.children!; // Safe because we're inside the check
@@ -271,16 +273,16 @@ function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: Vertica
                   {children.length > 1 && (
                     <>
                       {/* Top horizontal line connecting all children */}
-                      <div 
-                        className="absolute -top-6 left-0 right-0 h-[2px] bg-black"
-                        style={{
-                          left: index === 0 ? '50%' : '0',
-                          right: index === children.length - 1 ? '50%' : '0',
-                          width: index === 0 || index === children.length - 1 ? '50%' : '100%',
-                        }}
-                      />
-                      {/* Vertical line from horizontal line to child */}
-                      <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-[2px] h-6 bg-black" />
+                    <div 
+                      className="absolute -top-4 md:-top-6 left-0 right-0 h-[2px] bg-black"
+                      style={{
+                        left: index === 0 ? '50%' : '0',
+                        right: index === children.length - 1 ? '50%' : '0',
+                        width: index === 0 || index === children.length - 1 ? '50%' : '100%',
+                      }}
+                    />
+                    {/* Vertical line from horizontal line to child */}
+                    <div className="absolute -top-4 md:-top-6 left-1/2 transform -translate-x-1/2 w-[2px] h-4 md:h-6 bg-black" />
                     </>
                   )}
                   
@@ -335,9 +337,9 @@ export function CareerPathTree({ onAnimationComplete }: CareerPathTreeProps) {
   };
 
   return (
-    <div className="w-full h-full overflow-auto bg-white p-6">
-      <div className="mb-6 pb-3 border-b-2 border-black">
-        <h2 className="text-3xl font-bold text-black">
+    <div className="w-full h-full overflow-auto bg-white p-3 md:p-6">
+      <div className="mb-4 md:mb-6 pb-2 md:pb-3 border-b-2 border-black">
+        <h2 className="text-xl md:text-3xl font-bold text-black">
           <span className="bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
             CAREER PATH FINDER
           </span>
