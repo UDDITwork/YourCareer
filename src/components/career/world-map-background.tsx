@@ -12,7 +12,7 @@ export function WorldMapBackground({ isVisible }: WorldMapBackgroundProps) {
       initial={{ opacity: 1 }}
       animate={{ opacity: isVisible ? 1 : 0 }}
       transition={{ duration: 1.5 }}
-      className="absolute inset-0 left-0 w-[40%] h-full overflow-hidden bg-white"
+      className="absolute inset-0 left-0 w-[60%] h-full overflow-hidden bg-white"
     >
       {/* World map image with better visibility */}
       <div

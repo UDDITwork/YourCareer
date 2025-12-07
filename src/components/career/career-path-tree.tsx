@@ -218,8 +218,7 @@ function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: Vertica
       >
         <div className="flex flex-col items-center gap-1">
           <p className="text-sm font-medium text-black leading-tight">
-            {displayText}
-            {isTyping && <span className="ml-1 animate-pulse text-black">|</span>}
+            {displayText || node.name}
           </p>
           {node.duration && (
             <p className="text-xs text-gray-600">{node.duration}</p>
@@ -247,35 +246,38 @@ function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: Vertica
             transition={{ duration: 0.3 }}
             className="flex flex-wrap items-start justify-center gap-4 relative"
           >
-            {node.children.map((child, index) => (
-              <div key={index} className="flex flex-col items-center relative">
-                {/* Horizontal connector line (if multiple children) */}
-                {node.children && node.children.length > 1 && (
-                  <>
-                    {/* Top horizontal line connecting all children */}
-                    <div 
-                      className="absolute -top-6 left-0 right-0 h-[2px] bg-black"
-                      style={{
-                        left: index === 0 ? '50%' : '0',
-                        right: index === (node.children?.length ?? 0) - 1 ? '50%' : '0',
-                        width: index === 0 || index === (node.children?.length ?? 0) - 1 ? '50%' : '100%',
-                      }}
-                    />
-                    {/* Vertical line from horizontal line to child */}
-                    <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-[2px] h-6 bg-black" />
-                  </>
-                )}
-                
-                {/* Recursive call for child nodes */}
-                <VerticalTreeNode
-                  node={child}
-                  level={level + 1}
-                  isVisible={isVisible}
-                  delay={delay + (index + 1) * 0.1}
-                  onComplete={onComplete}
-                />
-              </div>
-            ))}
+            {node.children.map((child, index) => {
+              const children = node.children!; // Safe because we're inside the check
+              return (
+                <div key={index} className="flex flex-col items-center relative">
+                  {/* Horizontal connector line (if multiple children) */}
+                  {children.length > 1 && (
+                    <>
+                      {/* Top horizontal line connecting all children */}
+                      <div 
+                        className="absolute -top-6 left-0 right-0 h-[2px] bg-black"
+                        style={{
+                          left: index === 0 ? '50%' : '0',
+                          right: index === children.length - 1 ? '50%' : '0',
+                          width: index === 0 || index === children.length - 1 ? '50%' : '100%',
+                        }}
+                      />
+                      {/* Vertical line from horizontal line to child */}
+                      <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-[2px] h-6 bg-black" />
+                    </>
+                  )}
+                  
+                  {/* Recursive call for child nodes */}
+                  <VerticalTreeNode
+                    node={child}
+                    level={level + 1}
+                    isVisible={isVisible}
+                    delay={delay + (index + 1) * 0.1}
+                    onComplete={onComplete}
+                  />
+                </div>
+              );
+            })}
           </motion.div>
         )}
       </AnimatePresence>
