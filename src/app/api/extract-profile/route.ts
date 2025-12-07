@@ -2,13 +2,39 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import Anthropic from '@anthropic-ai/sdk';
 import mammoth from 'mammoth';
+import * as pdfjsLib from 'pdfjs-dist';
 
-// pdf-parse has issues with importing test files at build time
-// Use dynamic import to avoid this
+// Configure pdf.js worker for serverless environment
+if (typeof window === 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+}
+
+// Parse PDF using pdfjs-dist (works in serverless environments)
 async function parsePDF(buffer: Buffer): Promise<string> {
-  const pdfParse = (await import('pdf-parse')).default;
-  const data = await pdfParse(buffer);
-  return data.text;
+  try {
+    const uint8Array = new Uint8Array(buffer);
+    const loadingTask = pdfjsLib.getDocument({
+      data: uint8Array,
+      useSystemFonts: true,
+    });
+
+    const pdf = await loadingTask.promise;
+    const textParts: string[] = [];
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items
+        .map((item) => ('str' in item ? item.str : ''))
+        .join(' ');
+      textParts.push(pageText);
+    }
+
+    return textParts.join('\n\n');
+  } catch (error) {
+    console.error('PDF.js parsing error:', error);
+    throw error;
+  }
 }
 
 // Profile extraction prompt for Anthropic
@@ -123,7 +149,7 @@ export async function POST(request: Request) {
         }
 
         // Validate PDF header (should start with %PDF)
-        const pdfHeader = buffer.slice(0, 4).toString();
+        const pdfHeader = buffer.subarray(0, 4).toString();
         if (!pdfHeader.startsWith('%PDF')) {
           return NextResponse.json(
             { error: 'Invalid PDF file format. The file does not appear to be a valid PDF.' },
