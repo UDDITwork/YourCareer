@@ -2,3 +2,17 @@
 footer {
   display: none !important;
 }
+
+/* White theme for check page */
+.check-page-container * {
+  color: black;
+}
+
+.check-page-container {
+  background: white;
+}
+
+.check-page-container .border {
+  border-color: black;
+  border-width: 0.5px;
+}

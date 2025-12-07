@@ -16,10 +16,10 @@ const withMDX = mdx({
 });
 
 const nextConfig: NextConfig = {
-  experimental: {
-    turbo: {
-      // ...
-    },
+  // Updated: moved from experimental.turbo to turbopack
+  turbopack: {
+    // MDX is not fully supported with Turbopack yet
+    // If you need MDX, run dev without --turbopack flag
   },
   // Allow MDX files to be considered pages/components
   pageExtensions: ['ts', 'tsx', 'mdx'],
