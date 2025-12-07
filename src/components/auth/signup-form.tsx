@@ -36,7 +36,7 @@ interface FormState {
   success?: boolean;
 }
 
-export function SignupForm() {
+export function SignupForm({ next }: { next?: string }) {
   const [formState, setFormState] = useState<FormState>({});
   const { 
     formData, 
@@ -77,6 +77,9 @@ export function SignupForm() {
       formDataToSend.append('email', formData.email);
       formDataToSend.append('password', formData.password);
       formDataToSend.append('name', formData.name || '');
+      if (next) {
+        formDataToSend.append('next', next);
+      }
       
       const result = await signup(formDataToSend);
       if (!result.success) {

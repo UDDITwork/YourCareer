@@ -51,6 +51,16 @@ export function Hero() {
             </button>
           </AuthDialog>
           <Link
+            href="/check"
+            className="px-6 py-3 bg-accent text-accent-foreground border-2 border-foreground font-serif font-semibold uppercase tracking-wider transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex items-center justify-center"
+            aria-label="Get career counselling"
+          >
+            <span>Career Counselling</span>
+            <svg className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+          <Link
             href="https://github.com/UDDITwork"
             target="_blank"
             rel="noopener noreferrer"

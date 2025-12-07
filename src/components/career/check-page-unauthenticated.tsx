@@ -12,12 +12,12 @@ export function CheckPageUnauthenticated() {
 
   useEffect(() => {
     // Animation sequence:
-    // 1. Map visible initially (2 seconds)
+    // 1. Map visible initially (2.5 seconds)
     // 2. Map fades out (1.5 seconds)
     // 3. Tree appears after map fades out
     const sequence = async () => {
-      // Wait 2 seconds with map visible
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Wait 2.5 seconds with map visible
+      await new Promise(resolve => setTimeout(resolve, 2500));
       
       // Fade out map
       setMapVisible(false);

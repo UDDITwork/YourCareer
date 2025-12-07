@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoginForm } from "@/components/auth/login-form";
@@ -46,13 +47,13 @@ function TabButton({ value, children }: TabButtonProps) {
   );
 }
 
-function SocialAuth() {
+function SocialAuth({ next }: { next?: string }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGithubSignIn = async () => {
     try {
       setIsLoading(true);
-      const result = await signInWithGithub();
+      const result = await signInWithGithub(next);
       
       if (!result.success) {
         console.error('❌ GitHub sign in error:', result.error);
@@ -108,6 +109,8 @@ function SocialAuth() {
 export function AuthDialog({ children }: AuthDialogProps) {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
+  const pathname = usePathname();
+  const next = pathname === '/check' ? '/check' : undefined;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -172,8 +175,8 @@ export function AuthDialog({ children }: AuthDialogProps) {
                     <h3 className="text-lg font-semibold text-slate-900">Welcome back</h3>
                     <p className="text-sm text-slate-600 mt-1">Sign in to continue</p>
                   </div>
-                  <LoginForm />
-                  <SocialAuth />
+                  <LoginForm next={next} />
+                  <SocialAuth next={next} />
                 </TabsContent>
                 
                 <TabsContent value="signup" className="mt-0 space-y-4">
@@ -181,8 +184,8 @@ export function AuthDialog({ children }: AuthDialogProps) {
                     <h3 className="text-lg font-semibold text-slate-900">Get started</h3>
                     <p className="text-sm text-slate-600 mt-1">Create your free account</p>
                   </div>
-                  <SignupForm />
-                  <SocialAuth />
+                  <SignupForm next={next} />
+                  <SocialAuth next={next} />
                 </TabsContent>
               </div>
             </Tabs>

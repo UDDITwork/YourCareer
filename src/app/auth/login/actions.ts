@@ -23,19 +23,26 @@ export async function login(formData: FormData): Promise<AuthResult> {
     password: formData.get('password') as string,
   }
 
+  const next = formData.get('next') as string | null;
+
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
     return { success: false, error: error.message }
   }
 
-  redirect('/')
+  // Redirect to /check if coming from /check page, otherwise redirect to home
+  const redirectPath = next === '/check' ? '/check' : '/home';
+  redirect(redirectPath)
   return { success: true }
 }
 
 // Signup
 export async function signup(formData: FormData): Promise<AuthResult> {
   const supabase = await createServiceClient();
+
+  const next = formData.get('next') as string | null;
+  const redirectPath = next === '/check' ? '/check' : '/home';
 
   const data = {
     email: formData.get('email') as string,
@@ -44,7 +51,7 @@ export async function signup(formData: FormData): Promise<AuthResult> {
       data: {
         full_name: formData.get('name') as string,
       },
-      emailRedirectTo: `${getSiteUrl()}/auth/confirm`
+      emailRedirectTo: `${getSiteUrl()}/auth/confirm?next=${encodeURIComponent(redirectPath)}`
     }
   }
   const { error: signupError } = await supabase.auth.signUp(data);
@@ -122,16 +129,17 @@ export async function joinWaitlist(formData: FormData): Promise<AuthResult> {
 } 
 
 // GitHub Sign In
-export async function signInWithGithub(): Promise<GithubAuthResult> {
+export async function signInWithGithub(next?: string): Promise<GithubAuthResult> {
   const supabase = await createClient();
 
   try {
+    const redirectPath = next === '/check' ? '/check' : '/home';
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
         redirectTo: `${getSiteUrl()}/auth/callback`,
         queryParams: {
-          next: '/'
+          next: redirectPath
         }
       }
     });

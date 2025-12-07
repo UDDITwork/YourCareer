@@ -32,7 +32,7 @@ function SubmitButton() {
   );
 }
 
-export function LoginForm() {
+export function LoginForm({ next }: { next?: string }) {
   const [error, setError] = useState<string>();
   const { 
     formData, 
@@ -71,6 +71,9 @@ export function LoginForm() {
       const formDataToSend = new FormData();
       formDataToSend.append('email', formData.email);
       formDataToSend.append('password', formData.password);
+      if (next) {
+        formDataToSend.append('next', next);
+      }
       
       const result = await login(formDataToSend);
       if (!result.success) {

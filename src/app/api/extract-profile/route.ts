@@ -114,11 +114,49 @@ export async function POST(request: Request) {
     // Parse document based on type
     if (file.type === 'application/pdf') {
       try {
+        // Validate buffer is not empty
+        if (!buffer || buffer.length === 0) {
+          return NextResponse.json(
+            { error: 'The PDF file appears to be empty or corrupted.' },
+            { status: 400 }
+          );
+        }
+
+        // Validate PDF header (should start with %PDF)
+        const pdfHeader = buffer.slice(0, 4).toString();
+        if (!pdfHeader.startsWith('%PDF')) {
+          return NextResponse.json(
+            { error: 'Invalid PDF file format. The file does not appear to be a valid PDF.' },
+            { status: 400 }
+          );
+        }
+
         documentText = await parsePDF(buffer);
+        
+        // Validate extracted text
+        if (!documentText || typeof documentText !== 'string') {
+          return NextResponse.json(
+            { error: 'The PDF file could not be read. It may be encrypted, image-based, or corrupted. Please try a different PDF file.' },
+            { status: 400 }
+          );
+        }
       } catch (pdfError) {
         console.error('PDF parsing error:', pdfError);
+        
+        // Provide more specific error messages
+        const errorMessage = pdfError instanceof Error ? pdfError.message : String(pdfError);
+        let userMessage = 'Failed to parse PDF file. Please ensure it is a valid PDF.';
+        
+        if (errorMessage.includes('encrypted') || errorMessage.includes('password')) {
+          userMessage = 'The PDF file is password-protected. Please remove the password and try again.';
+        } else if (errorMessage.includes('corrupt') || errorMessage.includes('invalid')) {
+          userMessage = 'The PDF file appears to be corrupted or invalid. Please try a different PDF file.';
+        } else if (errorMessage.includes('image') || errorMessage.includes('scan')) {
+          userMessage = 'The PDF appears to be image-based (scanned). Please use a text-based PDF or convert it to text first.';
+        }
+        
         return NextResponse.json(
-          { error: 'Failed to parse PDF file. Please ensure it is a valid PDF.' },
+          { error: userMessage },
           { status: 400 }
         );
       }
