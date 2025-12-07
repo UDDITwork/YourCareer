@@ -250,15 +250,15 @@ function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: Vertica
             {node.children.map((child, index) => (
               <div key={index} className="flex flex-col items-center relative">
                 {/* Horizontal connector line (if multiple children) */}
-                {node.children.length > 1 && (
+                {node.children && node.children.length > 1 && (
                   <>
                     {/* Top horizontal line connecting all children */}
                     <div 
                       className="absolute -top-6 left-0 right-0 h-[2px] bg-black"
                       style={{
                         left: index === 0 ? '50%' : '0',
-                        right: index === node.children.length - 1 ? '50%' : '0',
-                        width: index === 0 || index === node.children.length - 1 ? '50%' : '100%',
+                        right: index === (node.children?.length ?? 0) - 1 ? '50%' : '0',
+                        width: index === 0 || index === (node.children?.length ?? 0) - 1 ? '50%' : '100%',
                       }}
                     />
                     {/* Vertical line from horizontal line to child */}
@@ -289,7 +289,6 @@ interface CareerPathTreeProps {
 
 export function CareerPathTree({ onAnimationComplete }: CareerPathTreeProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const [completedNodes, setCompletedNodes] = useState(0);
   const totalNodes = countNodes(careerTreeData);
   const [hasCalledComplete, setHasCalledComplete] = useState(false);
 
@@ -301,6 +300,8 @@ export function CareerPathTree({ onAnimationComplete }: CareerPathTreeProps) {
     return () => clearTimeout(timer);
   }, []);
 
+  const [completedNodes, setCompletedNodes] = useState(0);
+  
   const handleNodeComplete = () => {
     setCompletedNodes((prev) => {
       const newCount = prev + 1;
