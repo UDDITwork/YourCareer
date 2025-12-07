@@ -1,12 +1,12 @@
 'use client'
 
-
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { logout } from "@/app/auth/login/actions";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 interface LogoutButtonProps {
   className?: string;
@@ -14,18 +14,22 @@ interface LogoutButtonProps {
 
 export function LogoutButton({ className }: LogoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleLogout = async () => {
     try {
       setIsLoading(true);
-      await logout();
-    } catch {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      router.push('/');
+      router.refresh();
+    } catch (error) {
+      console.error('Logout error:', error);
       toast({
         title: "Error signing out",
         description: "Please try again",
         variant: "destructive",
       });
-    } finally {
       setIsLoading(false);
     }
   };
