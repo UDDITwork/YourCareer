@@ -144,11 +144,9 @@ const careerTreeData: CareerNode = {
   ],
 };
 
-interface CareerCardProps {
+interface VerticalTreeNodeProps {
   node: CareerNode;
   level: number;
-  index: number;
-  totalSiblings: number;
   isVisible: boolean;
   delay: number;
   onComplete: () => void;
@@ -157,22 +155,22 @@ interface CareerCardProps {
 function getTypeColor(type?: string) {
   switch (type) {
     case 'degree':
-      return 'bg-blue-50 border-blue-200';
+      return 'bg-blue-50 border-blue-300';
     case 'diploma':
-      return 'bg-orange-50 border-orange-200';
+      return 'bg-orange-50 border-orange-300';
     case 'exam':
-      return 'bg-purple-50 border-purple-200';
+      return 'bg-purple-50 border-purple-300';
     case 'job':
-      return 'bg-green-50 border-green-200';
+      return 'bg-green-50 border-green-300';
     case 'stream':
-      return 'bg-gray-50 border-gray-300';
+      return 'bg-gray-50 border-gray-400';
     default:
-      return 'bg-white border-gray-200';
+      return 'bg-white border-gray-300';
   }
 }
 
-function CareerCard({ node, level, index, totalSiblings, isVisible, delay, onComplete }: CareerCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: VerticalTreeNodeProps) {
+  const [isExpanded, setIsExpanded] = useState(level < 2); // Auto-expand first 2 levels
   const [displayText, setDisplayText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const hasChildren = node.children && node.children.length > 0;
@@ -192,7 +190,7 @@ function CareerCard({ node, level, index, totalSiblings, isVisible, delay, onCom
         clearInterval(typingInterval);
         setIsTyping(false);
         onComplete();
-        if (hasChildren) {
+        if (hasChildren && level < 2) {
           setTimeout(() => {
             setIsExpanded(true);
           }, 200);
@@ -201,67 +199,87 @@ function CareerCard({ node, level, index, totalSiblings, isVisible, delay, onCom
     }, 30);
 
     return () => clearInterval(typingInterval);
-  }, [isVisible, node.name, hasChildren, onComplete]);
+  }, [isVisible, node.name, hasChildren, level, onComplete]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: isVisible ? 1 : 0, y: 0 }}
-      transition={{ duration: 0.4, delay }}
-      className="relative"
-    >
-      <div
+    <div className="flex flex-col items-center">
+      {/* Card */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, y: -20 }}
+        animate={{ opacity: isVisible ? 1 : 0, scale: 1, y: 0 }}
+        transition={{ duration: 0.4, delay }}
         className={`
-          relative border-[0.5px] border-black rounded-lg p-3 mb-3
+          relative border-[0.5px] border-black rounded-lg p-3 mb-4
           ${getTypeColor(node.type)}
-          ${hasChildren ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}
-          min-w-[200px] max-w-[280px]
+          ${hasChildren ? 'cursor-pointer hover:shadow-lg transition-all' : ''}
+          min-w-[180px] max-w-[220px] text-center z-10
         `}
         onClick={() => hasChildren && setIsExpanded(!isExpanded)}
       >
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex-1">
-            <p className="text-sm font-medium text-black leading-tight">
-              {displayText}
-              {isTyping && <span className="ml-1 animate-pulse text-black">|</span>}
-            </p>
-            {node.duration && (
-              <p className="text-xs text-gray-600 mt-1">{node.duration}</p>
-            )}
-          </div>
+        <div className="flex flex-col items-center gap-1">
+          <p className="text-sm font-medium text-black leading-tight">
+            {displayText}
+            {isTyping && <span className="ml-1 animate-pulse text-black">|</span>}
+          </p>
+          {node.duration && (
+            <p className="text-xs text-gray-600">{node.duration}</p>
+          )}
           {hasChildren && (
-            <span className="text-black text-xs flex-shrink-0 mt-0.5">
+            <span className="text-black text-xs mt-1">
               {isExpanded ? '▼' : '▶'}
             </span>
           )}
         </div>
-      </div>
+      </motion.div>
 
+      {/* Vertical connector line from parent to children */}
+      {isExpanded && hasChildren && node.children && (
+        <div className="w-[2px] h-6 bg-black mb-2" />
+      )}
+
+      {/* Children - Horizontal Layout (side by side) */}
       <AnimatePresence>
         {isExpanded && hasChildren && node.children && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="ml-6 mt-2 space-y-2 border-l-2 border-gray-300 pl-4"
+            className="flex flex-wrap items-start justify-center gap-4 relative"
           >
-            {node.children.map((child, childIndex) => (
-              <CareerCard
-                key={childIndex}
-                node={child}
-                level={level + 1}
-                index={childIndex}
-                totalSiblings={node.children!.length}
-                isVisible={isVisible}
-                delay={delay + (childIndex + 1) * 0.05}
-                onComplete={onComplete}
-              />
+            {node.children.map((child, index) => (
+              <div key={index} className="flex flex-col items-center relative">
+                {/* Horizontal connector line (if multiple children) */}
+                {node.children.length > 1 && (
+                  <>
+                    {/* Top horizontal line connecting all children */}
+                    <div 
+                      className="absolute -top-6 left-0 right-0 h-[2px] bg-black"
+                      style={{
+                        left: index === 0 ? '50%' : '0',
+                        right: index === node.children.length - 1 ? '50%' : '0',
+                        width: index === 0 || index === node.children.length - 1 ? '50%' : '100%',
+                      }}
+                    />
+                    {/* Vertical line from horizontal line to child */}
+                    <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-[2px] h-6 bg-black" />
+                  </>
+                )}
+                
+                {/* Recursive call for child nodes */}
+                <VerticalTreeNode
+                  node={child}
+                  level={level + 1}
+                  isVisible={isVisible}
+                  delay={delay + (index + 1) * 0.1}
+                  onComplete={onComplete}
+                />
+              </div>
             ))}
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
 
@@ -306,12 +324,11 @@ export function CareerPathTree({ onAnimationComplete }: CareerPathTreeProps) {
         </h2>
       </div>
       
-      <div className="space-y-4">
-        <CareerCard
+      {/* Vertical Tree Container - flows top to bottom */}
+      <div className="flex justify-center items-start">
+        <VerticalTreeNode
           node={careerTreeData}
           level={0}
-          index={0}
-          totalSiblings={1}
           isVisible={isVisible}
           delay={0}
           onComplete={handleNodeComplete}
