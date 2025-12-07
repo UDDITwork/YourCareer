@@ -12,26 +12,25 @@ export function WorldMapBackground({ isVisible }: WorldMapBackgroundProps) {
       initial={{ opacity: 1 }}
       animate={{ opacity: isVisible ? 1 : 0 }}
       transition={{ duration: 1.5 }}
-      className="absolute inset-0 left-0 w-1/2 h-full overflow-hidden bg-white"
+      className="absolute inset-0 left-0 w-[40%] h-full overflow-hidden bg-white"
     >
-      {/* World map image with white overlay to create black outline effect */}
+      {/* World map image with better visibility */}
       <div
-        className="absolute inset-0 bg-white"
+        className="absolute inset-0"
         style={{
           backgroundImage: 'url(https://t3.ftcdn.net/jpg/16/45/84/38/360_F_1645843834_4r5DRuI5C3LeQbuPKmHGQ8uKqvSnP4ej.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          opacity: 0.3,
-          filter: 'grayscale(100%) contrast(200%) brightness(0.5)',
+          filter: 'grayscale(100%) contrast(150%) brightness(0.9)',
         }}
       />
       
-      {/* White overlay to make background white */}
-      <div className="absolute inset-0 bg-white opacity-70" />
+      {/* Light overlay to maintain readability */}
+      <div className="absolute inset-0 bg-white opacity-40" />
       
-      {/* Gradient fade to white on right edge - seamless blend, no visible boundary */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/80 to-white pointer-events-none" />
+      {/* Gradient fade to white on right edge - seamless blend */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-white pointer-events-none" />
     </motion.div>
   );
 }

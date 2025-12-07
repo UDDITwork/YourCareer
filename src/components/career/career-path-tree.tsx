@@ -10,7 +10,7 @@ interface CareerNode {
   type?: 'degree' | 'diploma' | 'job' | 'exam' | 'stream';
 }
 
-// Career path tree data structure based on the diagram
+// Career path tree data structure
 const careerTreeData: CareerNode = {
   name: '10th (S.S.S.)',
   children: [
@@ -144,24 +144,42 @@ const careerTreeData: CareerNode = {
   ],
 };
 
-interface TreeNodeProps {
+interface CareerCardProps {
   node: CareerNode;
   level: number;
+  index: number;
+  totalSiblings: number;
   isVisible: boolean;
   delay: number;
   onComplete: () => void;
 }
 
-function TreeNode({ node, level, isVisible, delay, onComplete }: TreeNodeProps) {
+function getTypeColor(type?: string) {
+  switch (type) {
+    case 'degree':
+      return 'bg-blue-50 border-blue-200';
+    case 'diploma':
+      return 'bg-orange-50 border-orange-200';
+    case 'exam':
+      return 'bg-purple-50 border-purple-200';
+    case 'job':
+      return 'bg-green-50 border-green-200';
+    case 'stream':
+      return 'bg-gray-50 border-gray-300';
+    default:
+      return 'bg-white border-gray-200';
+  }
+}
+
+function CareerCard({ node, level, index, totalSiblings, isVisible, delay, onComplete }: CareerCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [displayText, setDisplayText] = useState('');
-  const [showChildren, setShowChildren] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const hasChildren = node.children && node.children.length > 0;
 
   useEffect(() => {
     if (!isVisible) return;
 
-    // Typing animation
     const fullText = node.name;
     let currentIndex = 0;
     setIsTyping(true);
@@ -174,68 +192,76 @@ function TreeNode({ node, level, isVisible, delay, onComplete }: TreeNodeProps) 
         clearInterval(typingInterval);
         setIsTyping(false);
         onComplete();
-        if (node.children && node.children.length > 0) {
+        if (hasChildren) {
           setTimeout(() => {
             setIsExpanded(true);
-            setShowChildren(true);
-          }, 300);
+          }, 200);
         }
       }
-    }, 50); // Typing speed
+    }, 30);
 
     return () => clearInterval(typingInterval);
-  }, [isVisible, node.name, node.children, onComplete]);
-
-  const hasChildren = node.children && node.children.length > 0;
+  }, [isVisible, node.name, hasChildren, onComplete]);
 
   return (
-    <div className="relative" style={{ marginLeft: `${level * 20}px` }}>
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: isVisible ? 1 : 0, x: 0 }}
-        transition={{ duration: 0.3, delay }}
-        className="mb-2"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: isVisible ? 1 : 0, y: 0 }}
+      transition={{ duration: 0.4, delay }}
+      className="relative"
+    >
+      <div
+        className={`
+          relative border-[0.5px] border-black rounded-lg p-3 mb-3
+          ${getTypeColor(node.type)}
+          ${hasChildren ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}
+          min-w-[200px] max-w-[280px]
+        `}
+        onClick={() => hasChildren && setIsExpanded(!isExpanded)}
       >
-        <div
-          className={`inline-flex items-center px-3 py-1.5 border-[0.5px] border-black bg-white text-black text-sm cursor-pointer hover:bg-gray-50 transition-colors ${
-            hasChildren ? 'font-semibold' : 'font-normal'
-          }`}
-          onClick={() => hasChildren && setIsExpanded(!isExpanded)}
-        >
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1">
+            <p className="text-sm font-medium text-black leading-tight">
+              {displayText}
+              {isTyping && <span className="ml-1 animate-pulse text-black">|</span>}
+            </p>
+            {node.duration && (
+              <p className="text-xs text-gray-600 mt-1">{node.duration}</p>
+            )}
+          </div>
           {hasChildren && (
-            <span className="mr-2 text-black">{isExpanded ? '▼' : '▶'}</span>
-          )}
-          <span>{displayText}</span>
-          {node.duration && <span className="ml-2 text-gray-600 text-xs">({node.duration})</span>}
-          {isTyping && (
-            <span className="ml-1 animate-pulse text-black">|</span>
+            <span className="text-black text-xs flex-shrink-0 mt-0.5">
+              {isExpanded ? '▼' : '▶'}
+            </span>
           )}
         </div>
-      </motion.div>
+      </div>
 
       <AnimatePresence>
-        {showChildren && isExpanded && node.children && (
+        {isExpanded && hasChildren && node.children && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="ml-4 border-l-[0.5px] border-black pl-2"
+            className="ml-6 mt-2 space-y-2 border-l-2 border-gray-300 pl-4"
           >
-            {node.children.map((child, index) => (
-              <TreeNode
-                key={index}
+            {node.children.map((child, childIndex) => (
+              <CareerCard
+                key={childIndex}
                 node={child}
                 level={level + 1}
+                index={childIndex}
+                totalSiblings={node.children!.length}
                 isVisible={isVisible}
-                delay={delay + (index + 1) * 0.1}
+                delay={delay + (childIndex + 1) * 0.05}
                 onComplete={onComplete}
               />
             ))}
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 
@@ -250,10 +276,9 @@ export function CareerPathTree({ onAnimationComplete }: CareerPathTreeProps) {
   const [hasCalledComplete, setHasCalledComplete] = useState(false);
 
   useEffect(() => {
-    // Start animation after a short delay
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, 500);
+    }, 300);
 
     return () => clearTimeout(timer);
   }, []);
@@ -261,27 +286,32 @@ export function CareerPathTree({ onAnimationComplete }: CareerPathTreeProps) {
   const handleNodeComplete = () => {
     setCompletedNodes((prev) => {
       const newCount = prev + 1;
-      // Add a buffer to account for timing - call complete when we're close to done
       if (newCount >= totalNodes * 0.95 && !hasCalledComplete && onAnimationComplete) {
         setHasCalledComplete(true);
-        // Wait a bit more to ensure all animations are visible
         setTimeout(() => {
           onAnimationComplete();
-        }, 1000);
+        }, 800);
       }
       return newCount;
     });
   };
 
   return (
-    <div className="w-full h-full overflow-auto bg-white p-8">
-      <h2 className="text-2xl font-bold mb-6 text-black border-b-[0.5px] border-black pb-2">
-        CAREER PATH FINDER
-      </h2>
-      <div className="space-y-1">
-        <TreeNode
+    <div className="w-full h-full overflow-auto bg-white p-6">
+      <div className="mb-6 pb-3 border-b-2 border-black">
+        <h2 className="text-3xl font-bold text-black">
+          <span className="bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
+            CAREER PATH FINDER
+          </span>
+        </h2>
+      </div>
+      
+      <div className="space-y-4">
+        <CareerCard
           node={careerTreeData}
           level={0}
+          index={0}
+          totalSiblings={1}
           isVisible={isVisible}
           delay={0}
           onComplete={handleNodeComplete}
@@ -300,4 +330,3 @@ function countNodes(node: CareerNode): number {
   }
   return count;
 }
-
