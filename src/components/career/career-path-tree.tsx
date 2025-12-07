@@ -173,14 +173,27 @@ function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: Vertica
   const [isExpanded, setIsExpanded] = useState(level < 2); // Auto-expand first 2 levels
   const [displayText, setDisplayText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [hasCompleted, setHasCompleted] = useState(false);
   const hasChildren = node.children && node.children.length > 0;
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible) {
+      setDisplayText('');
+      setIsTyping(false);
+      setHasCompleted(false);
+      return;
+    }
+
+    // Reset when node name changes
+    if (hasCompleted) {
+      setDisplayText(node.name);
+      return;
+    }
 
     const fullText = node.name;
     let currentIndex = 0;
     setIsTyping(true);
+    setDisplayText('');
 
     const typingInterval = setInterval(() => {
       if (currentIndex < fullText.length) {
@@ -188,7 +201,10 @@ function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: Vertica
         currentIndex++;
       } else {
         clearInterval(typingInterval);
+        // Ensure full text is displayed and typing is stopped
+        setDisplayText(fullText);
         setIsTyping(false);
+        setHasCompleted(true);
         onComplete();
         if (hasChildren && level < 2) {
           setTimeout(() => {
@@ -199,7 +215,7 @@ function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: Vertica
     }, 30);
 
     return () => clearInterval(typingInterval);
-  }, [isVisible, node.name, hasChildren, level, onComplete]);
+  }, [isVisible, node.name, hasChildren, level, onComplete, hasCompleted]);
 
   return (
     <div className="flex flex-col items-center">
@@ -219,6 +235,7 @@ function VerticalTreeNode({ node, level, isVisible, delay, onComplete }: Vertica
         <div className="flex flex-col items-center gap-1">
           <p className="text-sm font-medium text-black leading-tight">
             {displayText || node.name}
+            {isTyping && <span className="ml-1 animate-pulse text-black">|</span>}
           </p>
           {node.duration && (
             <p className="text-xs text-gray-600">{node.duration}</p>
